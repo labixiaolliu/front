@@ -7,12 +7,13 @@
           <div class="layui-input-block">
             <input
               type="text"
-              name="title" required
+              name="title"
+              required
               lay-verify="required"
               placeholder="请输入标题"
               autocomplete="off"
               class="layui-input"
-            >
+            />
           </div>
         </div>
         <div class="layui-form-item">
@@ -20,12 +21,13 @@
           <div class="layui-input-block">
             <input
               type="password"
-              name="title" required
+              name="title"
+              required
               lay-verify="required"
               placeholder="请输入标题"
               autocomplete="off"
               class="layui-input"
-            >
+            />
           </div>
         </div>
         <div class="layui-form-item">
@@ -33,12 +35,13 @@
           <div class="layui-input-inline">
             <input
               type="text"
-              name="title" required
+              name="title"
+              required
               lay-verify="required"
               placeholder="请输入标题"
               autocomplete="off"
               class="layui-input"
-            >
+            />
           </div>
           <div class="layui-form-mid svg" v-html="svg" @click="getCaptcha"></div>
         </div>
@@ -56,7 +59,7 @@ export default {
   data() {
     return {
       svg: '',
-      code: '',
+      code: ''
     };
   },
   mounted() {
@@ -64,7 +67,7 @@ export default {
   },
   methods: {
     getCaptcha() {
-      axios.get('http://localhost:3000/getCaptcha').then((res) => {
+      axios.get('http://localhost:3000/getCaptcha').then(res => {
         console.log(res);
         if (res.status === 200) {
           const { data } = res;
@@ -74,25 +77,25 @@ export default {
           }
         }
       });
-    },
-  },
+    }
+  }
 };
 </script>
 
 <style lang="stylus" scoped>
-  .layui-content
-    background #f2f2f2
-    .layui-form
-      width 500px
-      margin-left 10%
-    .forget-password
-      margin-left 20px
-      &:hover
-        color red
-    .layui-form-item input
-      width 200px
-    .svg
-      position relative
-      margin-left 20px
-      margin-top -20px
+.layui-content
+  background #f2f2f2
+  .layui-form
+    width 500px
+    margin-left 10%
+  .forget-password
+    margin-left 20px
+    &:hover
+      color red
+  .layui-form-item input
+    width 200px
+  .svg
+    position relative
+    margin-left 20px
+    margin-top -20px
 </style>
