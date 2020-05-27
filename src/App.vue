@@ -4,51 +4,54 @@
       <form class="layui-form layui-form-pane" action="">
         <div class="layui-form-item">
           <label class="layui-form-label">用户名</label>
-          <div class="layui-input-inline">
-            <input
-              type="text"
-              name="name"
-              lay-verify="required"
-              placeholder="请输入用户名"
-              v-validate="'required|email'"
-              v-model.trim="name"
-              autocomplete="off"
-              class="layui-input"
-            />
-          </div>
-          <div class="error layui-form-mid">{{ errors.first('name') }}</div>
+          <validation-provider v-slot="{ errors }" rules="required|email" name="用户名">
+            <div class="layui-input-inline">
+              <input
+                type="text"
+                name="name"
+                lay-verify="required"
+                placeholder="请输入用户名"
+                v-model.trim="name"
+                autocomplete="off"
+                class="layui-input"
+              />
+            </div>
+            <div class="error layui-form-mid">{{ errors[0] }}</div>
+          </validation-provider>
         </div>
         <div class="layui-form-item">
           <label class="layui-form-label">密码</label>
-          <div class="layui-input-inline">
-            <input
-              type="password"
-              name="password"
-              lay-verify="required"
-              v-validate="'required|min:6'"
-              placeholder="请输入密码"
-              autocomplete="off"
-              v-model.trim="password"
-              class="layui-input"
-            />
-          </div>
-          <div class="error layui-form-mid">{{ errors.first('password') }}</div>
+          <validation-provider v-slot="{ errors }" rules="required|min:6" name="密码">
+            <div class="layui-input-inline">
+              <input
+                type="password"
+                name="password"
+                lay-verify="required"
+                placeholder="请输入密码"
+                autocomplete="off"
+                v-model.trim="password"
+                class="layui-input"
+              />
+            </div>
+            <div class="error layui-form-mid">{{ errors[0] }}</div>
+          </validation-provider>
         </div>
         <div class="layui-form-item">
           <label class="layui-form-label">验证码</label>
-          <div class="layui-input-inline">
-            <input
-              type="text"
-              name="code"
-              lay-verify="required"
-              placeholder="请输入标题"
-              v-validate="'required|digits:4'"
-              autocomplete="off"
-              v-model.trim="code"
-              class="layui-input"
-            />
-          </div>
-          <div class="error layui-form-mid">{{ errors.first('code') }}</div>
+          <validation-provider v-slot="{ errors }" rules="required|digits:4" name="验证码">
+            <div class="layui-input-inline">
+              <input
+                type="text"
+                name="code"
+                lay-verify="required"
+                placeholder="请输入标题"
+                autocomplete="off"
+                v-model.trim="code"
+                class="layui-input"
+              />
+            </div>
+            <div class="error layui-form-mid">{{ errors[0] }}</div>
+          </validation-provider>
           <div class="layui-form-mid svg" v-html="svg" @click="getCaptcha"></div>
         </div>
         <button type="button" class="layui-btn" @click="checkValidate">登陆</button>
@@ -58,9 +61,20 @@
   </div>
 </template>
 <script>
+import './local/zh';
 import axios from 'axios';
+import { ValidationProvider, extend } from 'vee-validate';
+import * as rules from 'vee-validate/dist/rules';
+
+for (let [rule, vallidation] of Object.entries(rules)) {
+  extend(rule, {
+    ...vallidation
+  });
+}
+
 export default {
   name: 'app',
+  components: { ValidationProvider },
   data() {
     return {
       svg: '',

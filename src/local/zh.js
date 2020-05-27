@@ -1,11 +1,12 @@
-import { Validator } from 'vee-validate';
-const dictionary = {
-  'zh-CN': {
+import { localize } from 'vee-validate';
+
+localize({
+  en: {
     messages: {
       required: field => '请填写' + field,
       email: () => '邮箱格式不正确',
-      min: (field, size) => field + '最少不得少于' + size + '位',
-      digits: (field, size) => field + '必须为' + size + '位'
+      min: (field, { length }) => `${field}最少不得少于${length}位`,
+      digits: (field, { length }) => `${field}必须为${length}位`
     },
     attributes: {
       name: '名字',
@@ -14,6 +15,4 @@ const dictionary = {
       code: '验证码'
     }
   }
-};
-
-Validator.localize(dictionary);
+});
