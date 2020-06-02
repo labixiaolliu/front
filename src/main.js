@@ -1,15 +1,11 @@
 import Vue from 'vue';
-// import VeeValidate, { Validator } from 'vee-validate';
 import App from './App.vue';
 import router from './router';
 import store from './store';
-// import './local/zh';
+import axios from 'axios';
 
 Vue.config.productionTip = false;
-// Vue.use(VeeValidate);
-
-// const validator = new Validator();
-// validator.localize('zh-CN');
+axios.defaults.baseURL = process.env.NODE_ENV === 'production' ? 'http://mydomain.com' : 'http://localhost:3000';
 
 new Vue({
   router,

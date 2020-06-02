@@ -12,35 +12,37 @@
       <!-- form表单 -->
       <form class="layui-form layui-form-pane" action="">
         <div class="layui-form-item">
-          <label class="layui-form-label">输入框</label>
-          <div class="layui-input-inline">
-            <input
-              type="text"
-              name="title"
-              required
-              lay-verify="required"
-              placeholder="请输入用户名"
-              autocomplete="off"
-              class="layui-input"
-            />
-          </div>
-          <div class="layui-form-mid layui-word-aux">辅助文字</div>
+          <validation-provider v-slot="{ errors }" rules="required|email" name="用户名">
+            <label class="layui-form-label">输入框</label>
+            <div class="layui-input-inline">
+              <input
+                type="text"
+                name="title"
+                v-model="name"
+                placeholder="请输入用户名"
+                autocomplete="off"
+                class="layui-input"
+              />
+            </div>
+            <div class="layui-form-mid error">{{ errors[0] }}</div>
+          </validation-provider>
         </div>
         <div class="layui-form-item">
-          <label class="layui-form-label">验证码</label>
-          <div class="layui-input-inline">
-            <input
-              type="text"
-              name="title"
-              required
-              lay-verify="required"
-              placeholder="请输入用户名"
-              autocomplete="off"
-              class="layui-input"
-            />
-          </div>
-          <div class="layui-form-mid layui-word-aux">辅助文字</div>
-          <div class="layui-input-inline validate-code" v-html="validateCode" @click="getValidateCode"></div>
+          <validation-provider v-slot="{ errors }" name="验证码" rules="required|length:4">
+            <label class="layui-form-label">验证码</label>
+            <div class="layui-input-inline">
+              <input
+                type="text"
+                name="title"
+                v-model="code"
+                placeholder="请输入用户名"
+                autocomplete="off"
+                class="layui-input"
+              />
+            </div>
+            <div class="layui-form-mid error">{{ errors[0] }}</div>
+            <div class="layui-input-inline validate-code" v-html="validateCode" @click="_getCode"></div>
+          </validation-provider>
         </div>
       </form>
       <div class="layui-form-item">
@@ -51,27 +53,34 @@
 </template>
 
 <script>
-import axios from 'axios';
+import '../local/zh';
+import { ValidationProvider, extend } from 'vee-validate';
+import * as rules from 'vee-validate/dist/rules';
+import { getCode } from '../api/login';
+
+for (let [rule, vallidation] of Object.entries(rules)) {
+  extend(rule, {
+    ...vallidation
+  });
+}
 export default {
   name: 'Forget',
+  components: {
+    ValidationProvider
+  },
   data() {
     return {
       validateCode: ''
     };
   },
   mounted() {
-    this.getValidateCode();
+    this._getCode();
   },
   methods: {
-    getValidateCode() {
-      axios.get('http://localhost:3000/getCaptcha').then((res) => {
-        console.log(res);
-
-        if (res.status === 200) {
-          const { data } = res;
-          if (data.code === 200) {
-            this.validateCode = data.data;
-          }
+    _getCode() {
+      getCode().then((res) => {
+        if (res.code === 200) {
+          this.validateCode = res.data;
         }
       });
     }
@@ -113,4 +122,6 @@ export default {
     margin-left 4px
     color #E6162D
     cursor pointer
+  .error
+    color red
 </style>
