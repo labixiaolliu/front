@@ -1,125 +1,25 @@
 <template>
   <div id="app">
-    <div class="layui-content">
-      <form class="layui-form layui-form-pane" action="">
-        <div class="layui-form-item">
-          <label class="layui-form-label">用户名</label>
-          <validation-provider v-slot="{ errors }" rules="required|email" name="用户名">
-            <div class="layui-input-inline">
-              <input
-                type="text"
-                name="name"
-                lay-verify="required"
-                placeholder="请输入用户名"
-                v-model.trim="name"
-                autocomplete="off"
-                class="layui-input"
-              />
-            </div>
-            <div class="error layui-form-mid">{{ errors[0] }}</div>
-          </validation-provider>
-        </div>
-        <div class="layui-form-item">
-          <label class="layui-form-label">密码</label>
-          <validation-provider v-slot="{ errors }" rules="required|min:6" name="密码">
-            <div class="layui-input-inline">
-              <input
-                type="password"
-                name="password"
-                lay-verify="required"
-                placeholder="请输入密码"
-                autocomplete="off"
-                v-model.trim="password"
-                class="layui-input"
-              />
-            </div>
-            <div class="error layui-form-mid">{{ errors[0] }}</div>
-          </validation-provider>
-        </div>
-        <div class="layui-form-item">
-          <label class="layui-form-label">验证码</label>
-          <validation-provider v-slot="{ errors }" rules="required|digits:4" name="验证码">
-            <div class="layui-input-inline">
-              <input
-                type="text"
-                name="code"
-                lay-verify="required"
-                placeholder="请输入标题"
-                autocomplete="off"
-                v-model.trim="code"
-                class="layui-input"
-              />
-            </div>
-            <div class="error layui-form-mid">{{ errors[0] }}</div>
-          </validation-provider>
-          <div class="layui-form-mid svg" v-html="svg" @click="getCaptcha"></div>
-        </div>
-        <button type="button" class="layui-btn" @click="checkValidate">登陆</button>
-        <a href="http://www.layui.com" class="forget-password">忘记密码</a>
-      </form>
-    </div>
+    <gg-header></gg-header>
+    <router-view></router-view>
+    <gg-footer></gg-footer>
   </div>
 </template>
 <script>
-import './local/zh';
-import axios from 'axios';
-import { ValidationProvider, extend } from 'vee-validate';
-import * as rules from 'vee-validate/dist/rules';
-
-for (let [rule, vallidation] of Object.entries(rules)) {
-  extend(rule, {
-    ...vallidation
-  });
-}
-
+import Header from './components/Header';
+import Footer from './components/Footer';
 export default {
   name: 'app',
-  components: { ValidationProvider },
-  data() {
-    return {
-      svg: '',
-      code: '',
-      name: '',
-      password: ''
-    };
-  },
-  mounted() {
-    this.getCaptcha();
-  },
-  methods: {
-    getCaptcha() {
-      axios.get('http://localhost:3000/getCaptcha').then(res => {
-        console.log(res);
-        if (res.status === 200) {
-          const { data } = res;
-          if (data.code === 200) {
-            this.svg = data.data;
-            // this.code = data.text;
-          }
-        }
-      });
-    },
-    checkValidate() {}
+  components: {
+    'gg-header': Header,
+    'gg-footer': Footer
   }
 };
 </script>
 
-<style lang="stylus" scoped>
-.layui-content
-  background #f2f2f2
-  .layui-form
-    width 600px
-    margin-left 10%
-  .forget-password
-    margin-left 20px
-    &:hover
-      color red
-  .layui-form-item input
-    width 200px
-  .svg
-    position relative
-    margin-left 20px
-    margin-top -20px
-  .error
-    color red
+<style lang="stylus">
+@import 'assets/layui/css/layui.css'
+// @import 'assets/css/iconfont.css'
+@import 'assets/css/global.css'
+@import 'assets/layui/css/modules/layer/default/layer.css'
 </style>

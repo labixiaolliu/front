@@ -1,6 +1,6 @@
 const path = require('path');
 
-const resolve = dir => path.join(__dirname, dir);
+const resolve = (dir) => path.join(__dirname, dir);
 const isProdMode = process.env.NODE_ENV === 'production';
 
 module.exports = {
@@ -18,7 +18,7 @@ module.exports = {
   //     chunks: ['chunk-vendors', 'chunk-common', 'index'],
   //   },
   // },
-  chainWebpack: config => {
+  chainWebpack: (config) => {
     config.resolve.alias
       .set('@', resolve('src'))
       .set('_c', resolve('src/components/'))
