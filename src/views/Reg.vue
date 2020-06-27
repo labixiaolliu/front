@@ -123,7 +123,12 @@ export default {
   },
   data() {
     return {
-      validateCode: ''
+      validateCode: '',
+      repassword: '',
+      name: '',
+      password: '',
+      code: '',
+      nick: ''
     };
   },
   mounted() {

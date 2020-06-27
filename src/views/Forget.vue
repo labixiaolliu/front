@@ -18,7 +18,7 @@
               <input
                 type="text"
                 name="title"
-                v-model="name"
+                v-model="user"
                 placeholder="请输入用户名"
                 autocomplete="off"
                 class="layui-input"
@@ -46,7 +46,7 @@
         </div>
       </form>
       <div class="layui-form-item">
-        <button type="button" class="layui-btn">提交</button>
+        <button type="button" class="layui-btn" @click="submit">提交</button>
       </div>
     </div>
   </div>
@@ -56,7 +56,7 @@
 import '../local/zh';
 import { ValidationProvider, extend } from 'vee-validate';
 import * as rules from 'vee-validate/dist/rules';
-import { getCode } from '../api/login';
+import { getCode, forget } from '../api/login';
 
 for (let [rule, vallidation] of Object.entries(rules)) {
   extend(rule, {
@@ -70,6 +70,8 @@ export default {
   },
   data() {
     return {
+      user: '',
+      code: '',
       validateCode: ''
     };
   },
@@ -81,6 +83,13 @@ export default {
       getCode().then((res) => {
         if (res.code === 200) {
           this.validateCode = res.data;
+        }
+      });
+    },
+    submit() {
+      forget({ user: this.user, code: this.code }).then((res) => {
+        if (res.code === 200) {
+          alert('邮件发送成功');
         }
       });
     }

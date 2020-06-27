@@ -12,7 +12,7 @@
       <!-- form表单 -->
       <form class="layui-form layui-form-pane" action="">
         <div class="layui-form-item">
-          <validation-provider v-slot="{ errors }" rules="required|email" name="用户名">
+          <validation-provider v-slot="{ errors }" rules="required|email" name="name">
             <label class="layui-form-label">输入框</label>
             <div class="layui-input-inline">
               <input
@@ -28,7 +28,7 @@
           </validation-provider>
         </div>
         <div class="layui-form-item">
-          <validation-provider v-slot="{ errors }" rules="required|min:6" name="密码">
+          <validation-provider v-slot="{ errors }" rules="required|min:6" name="password">
             <label class="layui-form-label">密码框</label>
             <div class="layui-input-inline">
               <input
@@ -44,7 +44,7 @@
           </validation-provider>
         </div>
         <div class="layui-form-item">
-          <validation-provider v-slot="{ errors }" rules="required|length:4" name="验证码">
+          <validation-provider v-slot="{ errors }" rules="required|length:4" name="code">
             <label class="layui-form-label">验证码</label>
             <div class="layui-input-inline">
               <input
@@ -76,16 +76,8 @@
 </template>
 
 <script>
-import '../local/zh';
-import { ValidationProvider, extend } from 'vee-validate';
-import * as rules from 'vee-validate/dist/rules';
+import { ValidationProvider } from 'vee-validate';
 import { getCode } from '../api/login';
-
-for (let [rule, vallidation] of Object.entries(rules)) {
-  extend(rule, {
-    ...vallidation
-  });
-}
 
 export default {
   name: 'Login',
