@@ -10,59 +10,61 @@
         <div class="layui-tab-content"></div>
       </div>
       <!-- form表单 -->
-      <form class="layui-form layui-form-pane" action="">
-        <div class="layui-form-item">
-          <validation-provider v-slot="{ errors }" rules="required|email" name="name">
-            <label class="layui-form-label">输入框</label>
-            <div class="layui-input-inline">
-              <input
-                type="text"
-                v-model="name"
-                name="name"
-                placeholder="请输入用户名"
-                autocomplete="off"
-                class="layui-input"
-              />
-            </div>
-            <div class="layui-form-mid error">{{ errors[0] }}</div>
-          </validation-provider>
-        </div>
-        <div class="layui-form-item">
-          <validation-provider v-slot="{ errors }" rules="required|min:6" name="password">
-            <label class="layui-form-label">密码框</label>
-            <div class="layui-input-inline">
-              <input
-                type="password"
-                name="password"
-                v-model="password"
-                placeholder="请输入密码"
-                autocomplete="off"
-                class="layui-input"
-              />
-            </div>
-            <div class="layui-form-mid error">{{ errors[0] }}</div>
-          </validation-provider>
-        </div>
-        <div class="layui-form-item">
-          <validation-provider v-slot="{ errors }" rules="required|length:4" name="code">
-            <label class="layui-form-label">验证码</label>
-            <div class="layui-input-inline">
-              <input
-                type="text"
-                name="code"
-                v-model="code"
-                placeholder="请输入用户名"
-                autocomplete="off"
-                class="layui-input"
-              />
-            </div>
-            <div class="layui-form-mid error">{{ errors[0] }}</div>
-            <div class="layui-input-inline validate-code" v-html="validateCode" @click="_getCode()"></div>
-          </validation-provider>
-        </div>
-      </form>
+      <validation-observer ref="form">
+        <form class="layui-form layui-form-pane" action="">
+          <div class="layui-form-item">
+            <validation-provider v-slot="{ errors }" rules="required|email" name="name">
+              <label class="layui-form-label">输入框</label>
+              <div class="layui-input-inline">
+                <input
+                  type="text"
+                  v-model="name"
+                  name="name"
+                  placeholder="请输入用户名"
+                  autocomplete="off"
+                  class="layui-input"
+                />
+              </div>
+              <div class="layui-form-mid error">{{ errors[0] }}</div>
+            </validation-provider>
+          </div>
+          <div class="layui-form-item">
+            <validation-provider v-slot="{ errors }" rules="required|min:6" name="password">
+              <label class="layui-form-label">密码框</label>
+              <div class="layui-input-inline">
+                <input
+                  type="password"
+                  name="password"
+                  v-model="password"
+                  placeholder="请输入密码"
+                  autocomplete="off"
+                  class="layui-input"
+                />
+              </div>
+              <div class="layui-form-mid error">{{ errors[0] }}</div>
+            </validation-provider>
+          </div>
+          <div class="layui-form-item">
+            <validation-provider v-slot="{ errors }" rules="required|length:4" name="code">
+              <label class="layui-form-label">验证码</label>
+              <div class="layui-input-inline">
+                <input
+                  type="text"
+                  name="code"
+                  v-model="code"
+                  placeholder="请输入用户名"
+                  autocomplete="off"
+                  class="layui-input"
+                />
+              </div>
+              <div class="layui-form-mid error">{{ errors[0] }}</div>
+              <div class="layui-input-inline validate-code" v-html="validateCode" @click="_getCode()"></div>
+            </validation-provider>
+          </div>
+        </form>
+      </validation-observer>
       <div class="layui-form-item">
-        <button type="button" class="layui-btn">立即登陆</button>
+        <button type="button" class="layui-btn" @click="submit()">立即登陆</button>
         <router-link tag="a" class="layui-btn forget-pass" :to="{ name: 'forget' }">忘记密码?</router-link>
       </div>
       <div class="layui-form-item other-login">
@@ -76,13 +78,15 @@
 </template>
 
 <script>
-import { ValidationProvider } from 'vee-validate';
-import { getCode } from '../api/login';
+import { ValidationProvider, ValidationObserver } from 'vee-validate'
+import { getCode, login } from '../api/login'
+import { v4 as uuidv4 } from 'uuid'
 
 export default {
   name: 'Login',
   components: {
-    ValidationProvider
+    ValidationProvider,
+    ValidationObserver
   },
   data() {
     return {
@@ -90,23 +94,48 @@ export default {
       name: '',
       password: '',
       code: ''
-    };
+    }
   },
   mounted() {
-    this._getCode();
+    let sid = ''
+    if (!localStorage.getItem('sid')) {
+      sid = uuidv4()
+      localStorage.setItem('sid', sid)
+    } else {
+      sid = localStorage.getItem('sid')
+    }
+    this.$store.commit('setSid', sid)
+    this._getCode()
   },
   methods: {
     _getCode() {
-      getCode().then((res) => {
+      let sid = this.$store.state.sid
+      getCode(sid).then((res) => {
         if (res.code === 200) {
-          this.validateCode = res.data;
+          this.validateCode = res.data
         }
-      });
+      })
+    },
+    submit() {
+      this.$refs.form.validate().then((success) => {
+        if (!success) {
+          return
+        } else {
+          login({
+            username: this.name,
+            password: this.password,
+            code: this.code,
+            sid: this.$store.state.sid
+          }).then((res) => {
+            console.log(res)
+          })
+        }
+      })
     },
     loginWithQQ() {},
     loginWithWeibo() {}
   }
-};
+}
 </script>
 
 <style lang="stylus" scoped>

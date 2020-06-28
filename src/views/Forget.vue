@@ -10,41 +10,43 @@
         <div class="layui-tab-content"></div>
       </div>
       <!-- form表单 -->
-      <form class="layui-form layui-form-pane" action="">
-        <div class="layui-form-item">
-          <validation-provider v-slot="{ errors }" rules="required|email" name="用户名">
-            <label class="layui-form-label">输入框</label>
-            <div class="layui-input-inline">
-              <input
-                type="text"
-                name="title"
-                v-model="user"
-                placeholder="请输入用户名"
-                autocomplete="off"
-                class="layui-input"
-              />
-            </div>
-            <div class="layui-form-mid error">{{ errors[0] }}</div>
-          </validation-provider>
-        </div>
-        <div class="layui-form-item">
-          <validation-provider v-slot="{ errors }" name="验证码" rules="required|length:4">
-            <label class="layui-form-label">验证码</label>
-            <div class="layui-input-inline">
-              <input
-                type="text"
-                name="title"
-                v-model="code"
-                placeholder="请输入用户名"
-                autocomplete="off"
-                class="layui-input"
-              />
-            </div>
-            <div class="layui-form-mid error">{{ errors[0] }}</div>
-            <div class="layui-input-inline validate-code" v-html="validateCode" @click="_getCode"></div>
-          </validation-provider>
-        </div>
-      </form>
+      <validation-observer ref="form">
+        <form class="layui-form layui-form-pane" action="">
+          <div class="layui-form-item">
+            <validation-provider v-slot="{ errors }" rules="required|email" name="name">
+              <label class="layui-form-label">输入框</label>
+              <div class="layui-input-inline">
+                <input
+                  type="text"
+                  name="title"
+                  v-model="user"
+                  placeholder="请输入用户名"
+                  autocomplete="off"
+                  class="layui-input"
+                />
+              </div>
+              <div class="layui-form-mid error">{{ errors[0] }}</div>
+            </validation-provider>
+          </div>
+          <div class="layui-form-item">
+            <validation-provider v-slot="{ errors }" name="code" rules="required|length:4">
+              <label class="layui-form-label">验证码</label>
+              <div class="layui-input-inline">
+                <input
+                  type="text"
+                  name="title"
+                  v-model="code"
+                  placeholder="请输入用户名"
+                  autocomplete="off"
+                  class="layui-input"
+                />
+              </div>
+              <div class="layui-form-mid error">{{ errors[0] }}</div>
+              <div class="layui-input-inline validate-code" v-html="validateCode" @click="_getCode"></div>
+            </validation-provider>
+          </div>
+        </form>
+      </validation-observer>
       <div class="layui-form-item">
         <button type="button" class="layui-btn" @click="submit">提交</button>
       </div>
@@ -53,48 +55,50 @@
 </template>
 
 <script>
-import '../local/zh';
-import { ValidationProvider, extend } from 'vee-validate';
-import * as rules from 'vee-validate/dist/rules';
-import { getCode, forget } from '../api/login';
+import '../local/zh'
+import { ValidationProvider, ValidationObserver } from 'vee-validate'
+import { getCode, forget } from '../api/login'
 
-for (let [rule, vallidation] of Object.entries(rules)) {
-  extend(rule, {
-    ...vallidation
-  });
-}
 export default {
   name: 'Forget',
   components: {
-    ValidationProvider
+    ValidationProvider,
+    ValidationObserver
   },
   data() {
     return {
       user: '',
       code: '',
       validateCode: ''
-    };
+    }
   },
   mounted() {
-    this._getCode();
+    this._getCode()
   },
   methods: {
     _getCode() {
-      getCode().then((res) => {
+      let sid = this.$store.state.sid
+      getCode(sid).then((res) => {
         if (res.code === 200) {
-          this.validateCode = res.data;
+          this.validateCode = res.data
         }
-      });
+      })
     },
     submit() {
-      forget({ user: this.user, code: this.code }).then((res) => {
-        if (res.code === 200) {
-          alert('邮件发送成功');
+      this.$refs.form.validate().then((success) => {
+        if (!success) {
+          return
+        } else {
+          forget({ user: this.user, code: this.code }).then((res) => {
+            if (res.code === 200) {
+              alert('邮件发送成功')
+            }
+          })
         }
-      });
+      })
     }
   }
-};
+}
 </script>
 
 <style lang="stylus" scoped>
