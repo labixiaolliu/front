@@ -5,7 +5,7 @@ import axios from '../utils/request'
  * @param {*} sid
  */
 function getCode(sid) {
-  return axios.get('/getCaptcha', {
+  return axios.get('/public/getCaptcha', {
     params: {
       sid: sid
     }
@@ -17,10 +17,8 @@ function getCode(sid) {
  * @param {*} useInfo (邮箱，密码，验证码)
  */
 function login(useInfo) {
-  return axios.post('/login', {
-    params: {
-      ...useInfo
-    }
+  return axios.post('/login/login', {
+    ...useInfo
   })
 }
 
