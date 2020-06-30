@@ -45,7 +45,7 @@
             </validation-provider>
           </div>
           <div class="layui-form-item">
-            <validation-provider v-slot="{ errors }" rules="required|length:4" name="code">
+            <validation-provider v-slot="{ errors }" rules="required|length:4" vid="code" name="code">
               <label class="layui-form-label">验证码</label>
               <div class="layui-input-inline">
                 <input
@@ -126,9 +126,34 @@ export default {
             password: this.password,
             code: this.code,
             sid: this.$store.state.sid
-          }).then((res) => {
-            console.log(res)
           })
+            .then((res) => {
+              console.log(res)
+              if (res.code === 200) {
+                console.log(res.token)
+                this.name = ''
+                this.password = ''
+                this.code = ''
+                this.$nextTick(() => {
+                  this.$refs.form.reset()
+                })
+              } else if (res.code === 402) {
+                //验证码错误
+                this.$refs.form.setErrors({
+                  code: [res.msg]
+                })
+              } else if (res.code === 403) {
+                //用户名密码错误
+                this.$alert('用户名或者密码错误')
+              }
+            })
+            .catch((error) => {
+              if (error.code === 500) {
+                this.$alert('校验用户名密码错误')
+              } else {
+                this.$alert('服务器错误')
+              }
+            })
         }
       })
     },
