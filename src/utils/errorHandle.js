@@ -1,4 +1,4 @@
 const errorHandle = (error) => {
-  console.log('request error is: ' + error);
-};
-export default errorHandle;
+  console.log('request error is: ' + error)
+}
+export default errorHandle

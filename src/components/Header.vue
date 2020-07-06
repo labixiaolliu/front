@@ -30,7 +30,7 @@
 export default {
   name: 'Header',
   mounted() {}
-};
+}
 </script>
 <style scoped lang="stylus">
 .fly-header

@@ -1,4 +1,4 @@
-import { localize } from 'vee-validate';
+import { localize } from 'vee-validate'
 
 localize({
   en: {
@@ -16,4 +16,4 @@ localize({
       code: '验证码'
     }
   }
-});
+})

@@ -27,7 +27,7 @@ async function forget(params) {
 }
 
 async function register(userInfo) {
-  return axios.post('/register', userInfo)
+  return axios.post('/login/register', { ...userInfo })
 }
 
 export { getCode, forget, login, register }

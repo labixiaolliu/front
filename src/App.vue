@@ -6,15 +6,15 @@
   </div>
 </template>
 <script>
-import Header from './components/Header';
-import Footer from './components/Footer';
+import Header from './components/Header'
+import Footer from './components/Footer'
 export default {
   name: 'app',
   components: {
     'gg-header': Header,
     'gg-footer': Footer
   }
-};
+}
 </script>
 
 <style lang="stylus">

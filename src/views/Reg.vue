@@ -13,7 +13,7 @@
       <validation-observer ref="form">
         <form class="layui-form layui-form-pane" action="">
           <div class="layui-form-item">
-            <validation-provider v-slot="{ errors }" rules="required|email" name="name">
+            <validation-provider v-slot="{ errors }" rules="required|email" name="name" vid="name">
               <label class="layui-form-label">输入框</label>
               <div class="layui-input-inline">
                 <input
@@ -29,7 +29,7 @@
             </validation-provider>
           </div>
           <div class="layui-form-item">
-            <validation-provider v-slot="{ errors }" :rules="{ required: true, mixChart: true }" name="nick">
+            <validation-provider v-slot="{ errors }" :rules="{ required: true, mixChart: true }" name="nick" vid="nick">
               <label class="layui-form-label">昵称</label>
               <div class="layui-input-inline">
                 <input
@@ -81,7 +81,7 @@
             </validation-provider>
           </div>
           <div class="layui-form-item">
-            <validation-provider v-slot="{ errors }" rules="required|length:4" name="code">
+            <validation-provider v-slot="{ errors }" rules="required|length:4" name="code" vid="code">
               <label class="layui-form-label">验证码</label>
               <div class="layui-input-inline">
                 <input
@@ -154,9 +154,29 @@ export default {
             username: this.name,
             password: this.password,
             code: this.code,
-            nik: this.nick
+            sid: this.$store.state.sid,
+            nick: this.nick
           }).then((res) => {
             console.log(res)
+            if (res.code === 200) {
+              this.name = ''
+              this.password = ''
+              this.repassword = ''
+              this.nick = ''
+              this.coed = ''
+              this.$refs.form.reset()
+              this.$alert('注册成功！')
+              setTimeout(() => {
+                this.$router.push({ name: 'login' })
+              }, 1000)
+            } else {
+              const error = res.error
+              this.$refs.form.setErrors({
+                code: error.code,
+                nick: error.nick,
+                name: error.username
+              })
+            }
           })
         }
       })

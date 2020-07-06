@@ -1,11 +1,11 @@
-const path = require('path');
+const path = require('path')
 
-const resolve = (dir) => path.join(__dirname, dir);
-const isProdMode = process.env.NODE_ENV === 'production';
+const resolve = (dir) => path.join(__dirname, dir)
+const isProdMode = process.env.NODE_ENV === 'production'
 
 module.exports = {
-  publicPath: isProdMode ? '/vue-demo/' : '',
-  outputDir: isProdMode ? 'vue-demo' : 'dist',
+  publicPath: isProdMode ? '/front/' : '',
+  outputDir: isProdMode ? 'front' : 'dist',
   assetsDir: '',
   filenameHashing: false,
   // 配置多入口文件
@@ -22,7 +22,7 @@ module.exports = {
     config.resolve.alias
       .set('@', resolve('src'))
       .set('_c', resolve('src/components/'))
-      .set('_as', resolve('src/assets/img/'));
+      .set('_as', resolve('src/assets/img/'))
   },
   lintOnSave: isProdMode ? false : 'warning',
   productionSourceMap: false,
@@ -34,4 +34,4 @@ module.exports = {
       //   }),
     ]
   }
-};
+}
