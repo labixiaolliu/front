@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import Home from '../views/Home.vue'
 
-const Home = () => import(/* webpackChunkName: "Home" */ '../views/Home.vue')
 const Login = () => import(/* webpackChunkName: 'Login' */ '../views/Login.vue')
 const Reg = () => import(/* webpackChunkName: 'Reg' */ '../views/Reg.vue')
 const Forget = () => import(/* webpackChunkName: 'Forget' */ '../views/Forget.vue')
@@ -10,14 +10,15 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/home',
+    path: '/',
     name: 'home',
     component: Home
   },
   {
-    path: '/',
+    path: '/login',
     name: 'login',
-    component: Login
+    component: Login,
+    alias: '/aaa'
   },
   {
     path: '/reg',
