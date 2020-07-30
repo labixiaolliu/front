@@ -37,15 +37,18 @@ export default {
   position fixed
   top 0
   width 100%
-  height 80px
+  height 60px
+  display flex
+  align-items center
   .content
     margin auto
     width 75%
     position relative
+    height 60px
     .login-list
       position absolute
       right 0
-      margin-top 5px
+      height 60px
   .icon-contact:before
     content '\e6b7'
   .icon-demo:before

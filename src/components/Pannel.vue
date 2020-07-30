@@ -1,18 +1,22 @@
 <template>
   <div class="panel">
-    <ul>
-      <li class="layui-hide-xs"><a href="">首页</a></li>
-      <li><a href="">提问</a></li>
-      <li><a href="">分享</a></li>
-      <li><a href="">讨论</a></li>
-      <li><a href="">建议</a></li>
-      <li><a href="">公告</a></li>
-      <li><a href="">动态</a></li>
-      <li class="layui-hide-xs"><span class="line"></span></li>
-      <li class="layui-hide-xs"><a href="">我发表的帖</a></li>
-      <li class="layui-hide-xs"><a href="">我收藏的帖</a></li>
-    </ul>
-    <div class="right layui-hide-xs">
+    <div class="layui-tab layui-tab-brief left-panel" lay-filter="docDemoTabBrief">
+      <ul class="layui-tab-title">
+        <router-link tag="li" to="/">首页</router-link>
+        <router-link tag="li" to="/index/ask">提问</router-link>
+        <router-link tag="li" to="/index/share">分享</router-link>
+        <router-link tag="li" to="/index/discuss">讨论</router-link>
+        <router-link tag="li" to="/index/advise">建议</router-link>
+        <router-link tag="li" to="/index/notice">公告</router-link>
+        <router-link tag="li" to="/index/cat">动态</router-link>
+        <li class="line"></li>
+        <template v-if="isLogin">
+          <li>我发表的帖</li>
+          <li>我收藏的帖</li>
+        </template>
+      </ul>
+    </div>
+    <div class="right-panel layui-hide-xs">
       <span class="layui-icon layui-icon-search"></span>
       <a href="" class="layui-btn">发表新帖</a>
     </div>
@@ -22,7 +26,9 @@
 export default {
   name: 'Pannel',
   data() {
-    return {}
+    return {
+      isLogin: this.$store.state.isLogin
+    }
   }
 }
 </script>
@@ -38,26 +44,23 @@ export default {
   margin-bottom 15px
   border-radius 2px
   background-color #fff
-  box-shadow 0px 1px 2px 0px rgb(0, 0, 0, 0.05)
+  box-shadow 0px 1px 2px 0px rgb(226, 226, 226, 0.05)
   position relative
-  ul>li
-    display inline-block
-    a
-      padding 0 20px
-    .line
-      display inline-block
-      height 10px
-      width 1px
-      background #e2e2e2
-      vertical-align middle
-      margin 0 10px
-  .right
-    position absolute
-    right 0
-    top 0
+  display flex
+  justify-content space-between
+  align-items center
+  .left-panel
+    background #ffffff
+    .layui-tab-title .layui-this:after, .layui-tab-title
+      border-bottom-width 0px
+    .layui-tab-title li
+      min-width 40px
+  .right-panel
+    display flex
+    justify-content flex-end
+    align-items center
     span
-      font-size 22px
-      margin-right 20px
-      &:hover
-        color red
+      margin 0 8px 0 2px
+    a
+      margin 0 8px 0 2px
 </style>

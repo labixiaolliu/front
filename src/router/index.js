@@ -5,6 +5,8 @@ import Home from '../views/Home.vue'
 const Login = () => import(/* webpackChunkName: 'Login' */ '../views/Login.vue')
 const Reg = () => import(/* webpackChunkName: 'Reg' */ '../views/Reg.vue')
 const Forget = () => import(/* webpackChunkName: 'Forget' */ '../views/Forget.vue')
+const index = () => import(/* webpackChunkName: 'index' */ '../views/channels/index.vue')
+const Template = () => import(/* webpackChunkName: 'template' */ '../views/channels/Template.vue')
 
 Vue.use(VueRouter)
 
@@ -12,7 +14,19 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: Home
+    component: Home,
+    children: [
+      {
+        path: '',
+        name: 'index',
+        component: index
+      },
+      {
+        path: 'index/:catalog',
+        name: 'template',
+        component: Template
+      }
+    ]
   },
   {
     path: '/login',
@@ -40,6 +54,7 @@ const routes = [
 ]
 
 const router = new VueRouter({
+  linkExactActiveClass: 'layui-this',
   routes
 })
 
