@@ -1,91 +1,128 @@
 <template>
   <div class="top-list-item">
-    <dl>
-      <dt class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+    <div class="item">
+      <div class="layui-tab layui-tab-brief title" lay-filter="docDemoTabBrief">
         <ul class="layui-tab-title">
-          <li class="layui-this">综合</li>
-          <li>未结</li>
-          <li>已结</li>
-          <li>精华</li>
+          <li
+            v-for="(item, index) of tabList"
+            :key="'tab' + index"
+            :class="currentTabIndex === index ? 'layui-this' : ''"
+            @click="selectTab(index)"
+          >
+            {{ item.name }}
+          </li>
         </ul>
         <ul class="layui-tab-title">
-          <li class="layui-this">按最新</li>
-          <li>按热议</li>
+          <li
+            v-for="(item, index) of sortList"
+            :key="'sort' + index"
+            :class="currentSortIndex === index ? 'layui-this' : ''"
+            @click="selectSort(index)"
+          >
+            {{ item.name }}
+          </li>
         </ul>
-      </dt>
-      <dd>
-        <img src="../assets/images/avatar/0.jpg" />
-        <div>
-          <div class="top">
-            <a class="layui-badge">动态</a>
-            <a class="title">基于layui的极简社区页面模版</a>
-          </div>
-          <div class="bottom">
-            <p class="name">贤心</p>
-            <i class="iconfont icon-renzheng" title="认证信息"></i>
-            <span class="layui-badge fly-badge-accept layui-hide-xs vip-level">VIP3</span>
-            <span class="time grey">刚刚</span>
-            <i class="iconfont icon-kiss red"></i>
-            <span class="red kiss-num">60</span>
-            <span class="layui-badge fly-badge-accept layui-hide-xs status">已结</span>
-          </div>
-        </div>
-      </dd>
-      <dd>
-        <img src="../assets/images/avatar/0.jpg" />
-        <div>
-          <div class="top">
-            <a class="layui-badge">动态</a>
-            <a class="title">基于layui的极简社区页面模版</a>
-          </div>
-          <div class="bottom">
-            <p class="name">贤心</p>
-            <i class="iconfont icon-renzheng" title="认证信息"></i>
-            <span class="layui-badge fly-badge-accept layui-hide-xs vip-level">VIP3</span>
-            <span class="time grey">刚刚</span>
-            <i class="iconfont icon-kiss red"></i>
-            <span class="red kiss-num">60</span>
-            <span class="layui-badge fly-badge-accept layui-hide-xs status">已结</span>
-          </div>
-        </div>
-      </dd>
-      <dd>
-        <img src="../assets/images/avatar/0.jpg" />
-        <div>
-          <div class="top">
-            <a class="layui-badge">动态</a>
-            <a class="title">基于layui的极简社区页面模版</a>
-          </div>
-          <div class="bottom">
-            <p class="name">贤心</p>
-            <i class="iconfont icon-renzheng" title="认证信息"></i>
-            <span class="layui-badge fly-badge-accept layui-hide-xs vip-level">VIP3</span>
-            <span class="time grey">刚刚</span>
-            <i class="iconfont icon-kiss red"></i>
-            <span class="red kiss-num">60</span>
-            <span class="layui-badge fly-badge-accept layui-hide-xs status">已结</span>
-          </div>
-        </div>
-      </dd>
-    </dl>
+      </div>
+      <list-item @nextPage="nextPage" :list="list" :isEnd="isEnd"></list-item>
+    </div>
   </div>
 </template>
 <script>
+import ListItem from './ListItem'
+import contentListMixins from '../mixins/contentListMixins'
 export default {
   name: 'List',
+  mixins: [contentListMixins],
   data() {
-    return {}
+    return {
+      isEnd: false,
+      isLoad: false,
+      currentTabIndex: 0,
+      currentSortIndex: 0,
+      tabList: [
+        {
+          name: '综合',
+          value: ''
+        },
+        {
+          name: '未结',
+          value: ''
+        },
+        {
+          name: '已结',
+          value: ''
+        },
+        {
+          name: '精华',
+          value: ''
+        }
+      ],
+      sortList: [
+        {
+          name: '按最新',
+          value: 'created'
+        },
+        {
+          name: '按热议',
+          value: 'hot'
+        }
+      ],
+      page: 0,
+      limit: 20,
+      catalog: '',
+      sort: 'created',
+      status: 0,
+      isTop: 0
+    }
+  },
+  components: {
+    ListItem
+  },
+  methods: {
+    selectTab(index) {
+      this.currentTabIndex = index
+    },
+    selectSort(index) {
+      this.currentSortIndex = index
+    },
+    nextPage() {
+      if (this.isEnd) return
+      if (this.isLoad) return
+      this.page++
+      this._getList()
+    },
+    init() {
+      this.page = 0
+      this.list = []
+      this._getList()
+    }
+  },
+  watch: {
+    currentTabIndex(newValue, oldValue) {
+      console.log('tab hange from ' + oldValue + ' to ' + newValue)
+      this.status = newValue
+      this.init()
+    },
+    currentSortIndex(newValue, oldValue) {
+      console.log('sort hange from ' + oldValue + ' to ' + newValue)
+      this.sort = this.sortList[newValue].value
+      this.init()
+    },
+    $route(newValue) {
+      this.catalog = newValue.params.catalog
+      this.init()
+    }
   }
 }
 </script>
 <style scoped lang="stylus">
 .top-list-item
   background #ffffff
-  margin-top 10px
-  dl
+  // margin-top 10px
+  .item
     padding-bottom 8px
     overflow hidden
-    dt
+    .title
       color #000000
       padding 10px 0px 10px 0px
       // margin-left 20px
@@ -106,53 +143,4 @@ export default {
         border-bottom-width 0px
       .layui-tab-title li
         min-width 20px
-    dd
-      display flex
-      align-items center
-      flex-wrap wrap
-      &:after
-        content ''
-        width 100%
-        height 1px
-        background #e2e2e2
-        // display block
-        margin 6px 0 6px 0px
-      >img
-        height 55px
-        margin 0 20px 0 20px
-      >div
-        display flex
-        flex-direction column
-        height 100%
-        .top
-          height 50%
-          display flex
-          align-items center
-          a
-            padding 0 2px 0 5px
-          .title
-            font-weight bold
-            font-size 1.3em
-        .bottom
-          height 40%
-          display flex
-          align-items flex-end
-          .name
-            margin 0 0 0 5px
-          .icon-renzheng
-            margin 0 3px 0 2px
-          .vip-level
-            margin 0 5px 0 3px
-          .time
-            margin 0 5px 0 5px
-          .icon-kiss
-            margin 0 2px 0 5px
-          .kiss-num
-            margin 0 5px 0 2px
-          .status
-            margin 0 5px 0 5px
-          .grey
-            color #e3e3e3
-          .red
-            color red
 </style>
