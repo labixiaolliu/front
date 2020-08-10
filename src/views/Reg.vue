@@ -156,28 +156,33 @@ export default {
             code: this.code,
             sid: this.$store.state.sid,
             nick: this.nick
-          }).then((res) => {
-            console.log(res)
-            if (res.code === 200) {
-              this.name = ''
-              this.password = ''
-              this.repassword = ''
-              this.nick = ''
-              this.coed = ''
-              this.$refs.form.reset()
-              this.$alert('注册成功！')
-              setTimeout(() => {
-                this.$router.push({ name: 'login' })
-              }, 1000)
-            } else {
-              const error = res.error
-              this.$refs.form.setErrors({
-                code: error.code,
-                nick: error.nick,
-                name: error.username
-              })
-            }
           })
+            .then((res) => {
+              console.log(111)
+              console.log(res)
+              if (res.code === 200) {
+                this.name = ''
+                this.password = ''
+                this.repassword = ''
+                this.nick = ''
+                this.coed = ''
+                this.$refs.form.reset()
+                this.$alert('注册成功！')
+                setTimeout(() => {
+                  this.$router.push({ name: 'login' })
+                }, 1000)
+              } else {
+                const error = res.error
+                this.$refs.form.setErrors({
+                  code: error.code,
+                  nick: error.nick,
+                  name: error.username
+                })
+              }
+            })
+            .catch((error) => {
+              this.$alert(error.message)
+            })
         }
       })
     },

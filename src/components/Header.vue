@@ -17,10 +17,10 @@
       </ul>
       <ul class="layui-nav layui-col-space10 layui-inline login-list">
         <li class="layui-nav-item login">
-          <a href=""><i class="iconfont icon-login "></i>登入</a>
+          <router-link tag="a" :to="{ name: 'login' }"><i class="iconfont icon-login "></i>登入</router-link>
         </li>
         <li class="layui-nav-item reg">
-          <a href="">注册<i class="iconfont icon-reg"></i></a>
+          <router-link tag="a" :to="{ name: 'reg' }">注册<i class="iconfont icon-reg "></i></router-link>
         </li>
       </ul>
     </div>
@@ -29,6 +29,14 @@
 <script>
 export default {
   name: 'Header',
+  computed: {
+    userInfo() {
+      return this.$store.state.userInfo
+    },
+    isLogin() {
+      return this.$store.state.isLogin
+    }
+  },
   mounted() {}
 }
 </script>

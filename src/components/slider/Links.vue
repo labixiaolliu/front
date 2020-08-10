@@ -3,20 +3,26 @@
     <dl>
       <dt>友情链接</dt>
       <dd>
-        <a href="">layui</a>
-        <a href="">iview</a>
-        <a href="">Vant</a>
-        <a href="">ElementUI</a>
-        <a href="">Bootstrap</a>
+        <a v-for="(item, index) of list" :key="'link' + index" :href="item.link">{{ item.title }}</a>
       </dd>
     </dl>
   </div>
 </template>
 <script>
+import { getLinks } from '../../api/content'
 export default {
   name: 'Tips',
   data() {
-    return {}
+    return {
+      list: []
+    }
+  },
+  mounted() {
+    getLinks().then((res) => {
+      if (res.code === 200) {
+        this.list = res.data
+      }
+    })
   }
 }
 </script>

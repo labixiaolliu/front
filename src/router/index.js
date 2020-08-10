@@ -13,7 +13,6 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'home',
     component: Home,
     children: [
       {
@@ -22,7 +21,7 @@ const routes = [
         component: index
       },
       {
-        path: 'index/:catalog',
+        path: '/index/:catalog',
         name: 'template',
         component: Template
       }

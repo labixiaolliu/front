@@ -27,6 +27,7 @@ export default {
 <style scoped lang="stylus">
 .top-list-item
   background #ffffff
+  margin-bottom 10px
   .item
     // padding-left 20px
     padding-bottom 8px

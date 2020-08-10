@@ -8,13 +8,15 @@ const contentListMixins = {
   methods: {
     _getList() {
       this.isLoad = true
+      console.log('status: ' + this.status)
       let opation = {
         page: this.page,
         limit: this.limit,
         catalog: this.catalog || '',
         sort: this.sort || '',
-        status: this.status || '',
-        isTop: this.isTop
+        isEnd: this.status || '',
+        isTop: this.isTop,
+        tag: this.tag || ''
       }
       getList(opation)
         .then((res) => {
@@ -41,6 +43,10 @@ const contentListMixins = {
     }
   },
   mounted() {
+    let catalog = this.$route.params['catalog']
+    if (typeof catalog !== 'undefined' && catalog !== '') {
+      this.catalog = catalog
+    }
     this._getList()
   }
 }

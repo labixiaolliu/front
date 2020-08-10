@@ -2,39 +2,29 @@
   <div class="hot-item">
     <dl>
       <dt>本周热议</dt>
-      <dd>
-        <span>Layui的gitHub以及各方面的知识大集合</span>
+      <dd v-for="(item, index) of list" :key="'top' + index">
+        <span>{{ item.title }}</span>
         <i class="layui-icon layui-icon-reply-fill"></i>
-        <a>16</a>
-      </dd>
-      <dd>
-        <span>Layui的gitHub以及各方面的知识大集合</span>
-        <i class="layui-icon layui-icon-reply-fill"></i>
-        <a>16</a>
-      </dd>
-      <dd>
-        <span>Layui的gitHub以及各方面的知识大集合</span>
-        <i class="layui-icon layui-icon-reply-fill"></i>
-        <a>16</a>
-      </dd>
-      <dd>
-        <span>Layui的gitHub以及各方面的知识大集合</span>
-        <i class="layui-icon layui-icon-reply-fill"></i>
-        <a>16</a>
-      </dd>
-      <dd>
-        <span>Layui的gitHub以及各方面的知识大集合</span>
-        <i class="layui-icon layui-icon-reply-fill"></i>
-        <a>16</a>
+        <a>{{ item.answer }}</a>
       </dd>
     </dl>
   </div>
 </template>
 <script>
+import { getTop } from '../../api/content'
 export default {
   name: 'HotList',
   data() {
-    return {}
+    return {
+      list: []
+    }
+  },
+  mounted() {
+    getTop().then((res) => {
+      if (res.code === 200) {
+        this.list = res.data
+      }
+    })
   }
 }
 </script>
@@ -65,9 +55,12 @@ export default {
       margin 2px 0 5px 5px
       display flex
       >span
-        width 60%
+        // width 60%
         display block
+        margin-right 10px
         ellipsis()
       >i, >a
-        color #e2e2e2
+        color #999
+      >a
+        margin-right 10px
 </style>

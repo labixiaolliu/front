@@ -2,7 +2,7 @@
   <div>
     <ul>
       <li v-for="(item, index) of items" :key="'list' + index">
-        <img src="../assets/images/avatar/0.jpg" />
+        <img :src="item.uid.pic" />
         <div class="left-item">
           <div class="top">
             <a class="layui-badge">{{ item.catalog }}</a>
@@ -17,7 +17,7 @@
             <span class="time grey">{{ item.created | moment }}</span>
             <i class="iconfont icon-kiss red"></i>
             <span class="red kiss-num">{{ item.fav }}</span>
-            <span class="layui-badge fly-badge-accept layui-hide-xs status" v-if="item.isEnd !== 0">已结</span>
+            <span class="layui-badge fly-badge-accept layui-hide-xs status" v-if="item.isEnd !== '0'">已结</span>
           </div>
         </div>
         <div class="right-item">
@@ -103,7 +103,7 @@ export default {
           case 'advise':
             item.catalog = '建议'
             break
-          case 'discusss':
+          case 'discuss':
             item.catalog = '讨论'
             break
         }
@@ -145,7 +145,8 @@ li
     margin 6px 0 6px 0px
   >img
     height 55px
-    margin 0 20px 0 20px
+    width 55px
+    margin 0 15px 0 20px
   >.left-item
     display flex
     flex-direction column
@@ -155,6 +156,8 @@ li
       height 50%
       display flex
       align-items center
+      .layui-badge
+        flex 0 0 auto
       a
         padding 0 2px 0 5px
       .title

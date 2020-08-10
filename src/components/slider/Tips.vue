@@ -2,19 +2,27 @@
   <div class="tips-item">
     <dl>
       <dt>温馨通道</dt>
-      <dd>Layui的gitHub以及各方面的知识大集合以及各方面的知识大集合</dd>
-      <dd>Layui的gitHub以及各方面的知识大集合</dd>
-      <dd>Layui的gitHub以及各方面的知识大集合</dd>
-      <dd>Layui的gitHub以及各方面的知识大集合</dd>
-      <dd>Layui的gitHub以及各方面的知识大集合</dd>
+      <dd v-for="(item, index) of list" :key="'tip' + index">
+        <a :href="item.link">{{ item.title }}</a>
+      </dd>
     </dl>
   </div>
 </template>
 <script>
+import { getTips } from '../../api/content'
 export default {
   name: 'Tips',
   data() {
-    return {}
+    return {
+      list: []
+    }
+  },
+  mounted() {
+    getTips().then((res) => {
+      if (res.code === 200) {
+        this.list = res.data
+      }
+    })
   }
 }
 </script>

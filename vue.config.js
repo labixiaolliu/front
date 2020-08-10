@@ -33,5 +33,8 @@ module.exports = {
       //     $: 'jquery',
       //   }),
     ]
+  },
+  devServer: {
+    proxy: 'http://localhost:3000'
   }
 }

@@ -7,7 +7,7 @@
             v-for="(item, index) of tabList"
             :key="'tab' + index"
             :class="currentTabIndex === index ? 'layui-this' : ''"
-            @click="selectTab(index)"
+            @click="selectTab(index, item.name)"
           >
             {{ item.name }}
           </li>
@@ -64,7 +64,7 @@ export default {
         },
         {
           name: '按热议',
-          value: 'hot'
+          value: 'answer'
         }
       ],
       page: 0,
@@ -72,14 +72,38 @@ export default {
       catalog: '',
       sort: 'created',
       status: 0,
-      isTop: 0
+      isTop: 0,
+      postIsEnd: 0
     }
   },
   components: {
     ListItem
   },
   methods: {
-    selectTab(index) {
+    selectTab(index, name) {
+      switch (name) {
+        case '综合':
+          this.status = ''
+          this.tag = ''
+          this.init()
+          break
+        case '未结':
+          this.status = '0'
+          this.tag = ''
+          this.init()
+          break
+        case '已结':
+          this.status = '1'
+          this.tag = ''
+          this.init()
+          break
+        case '精华':
+          this.status = ''
+          this.tag = '精华'
+          this.init()
+          break
+      }
+
       this.currentTabIndex = index
     },
     selectSort(index) {
@@ -94,22 +118,26 @@ export default {
     init() {
       this.page = 0
       this.list = []
+      this.isEnd = false
       this._getList()
     }
   },
   watch: {
-    currentTabIndex(newValue, oldValue) {
-      console.log('tab hange from ' + oldValue + ' to ' + newValue)
-      this.status = newValue
-      this.init()
-    },
+    // currentTabIndex(newValue, oldValue) {
+    //   console.log('tab hange from ' + oldValue + ' to ' + newValue)
+    //   this.status = newValue
+    //   this.init()
+    // },
     currentSortIndex(newValue, oldValue) {
       console.log('sort hange from ' + oldValue + ' to ' + newValue)
       this.sort = this.sortList[newValue].value
       this.init()
     },
-    $route(newValue) {
+    $route(newValue, oldValue) {
+      console.log('route change')
+      console.log(newValue, oldValue)
       this.catalog = newValue.params.catalog
+      console.log(this.catalog)
       this.init()
     }
   }

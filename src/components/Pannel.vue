@@ -8,7 +8,7 @@
         <router-link tag="li" to="/index/discuss">讨论</router-link>
         <router-link tag="li" to="/index/advise">建议</router-link>
         <router-link tag="li" to="/index/notice">公告</router-link>
-        <router-link tag="li" to="/index/cat">动态</router-link>
+        <router-link tag="li" to="/index/logs">动态</router-link>
         <li class="line"></li>
         <template v-if="isLogin">
           <li>我发表的帖</li>

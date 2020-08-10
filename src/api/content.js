@@ -6,7 +6,7 @@ import qs from 'qs'
  * @param {*} options
  */
 const getList = (options) => {
-  return axios.get('/public/list?' + qs.stringify(options))
+  return axios.get('/public/getList?' + qs.stringify(options))
 }
 
 // 温馨提醒
