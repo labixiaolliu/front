@@ -134,8 +134,11 @@ export default {
                 this.name = ''
                 this.password = ''
                 this.code = ''
+                this.$store.commit('setIsLogin', true)
+                this.$store.commit('setUserInfo', res.data)
                 this.$nextTick(() => {
                   this.$refs.form.reset()
+                  this.$router.push({ name: 'index' })
                 })
               } else if (res.code === 402) {
                 //验证码错误

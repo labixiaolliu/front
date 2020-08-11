@@ -15,7 +15,7 @@
           <a href="" class="layui-col-space10"><i class="iconfont icon-grid"></i>框架</a>
         </li>
       </ul>
-      <ul class="layui-nav layui-col-space10 layui-inline login-list">
+      <ul class="layui-nav layui-col-space10 layui-inline login-list" v-if="!isLogin">
         <li class="layui-nav-item login">
           <router-link tag="a" :to="{ name: 'login' }"><i class="iconfont icon-login "></i>登入</router-link>
         </li>
@@ -23,18 +23,65 @@
           <router-link tag="a" :to="{ name: 'reg' }">注册<i class="iconfont icon-reg "></i></router-link>
         </li>
       </ul>
+      <div
+        v-else
+        class="layui-nav layui-col-space10 layui-inline user-list layui-nav-item"
+        @mouseover="show()"
+        @mouseout="hide()"
+      >
+        <div class="user-info">
+          <p>{{ userInfo.nick }}</p>
+          <a>
+            <i class="iconfont icon-renzheng" title="认证信息" v-show="userInfo.isVip > 0"></i>
+            <i class="layui-badge fly-badge-vip layui-hide-xs" v-show="userInfo.isVip > 0">VIP{{ userInfo.isVip }}</i>
+          </a>
+          <img :src="userInfo.pic" />
+        </div>
+        <template v-if="isShow">
+          <dl class="layui-nav-child">
+            <dd><i class="layui-icon layui-icon-email"></i><span>基本设置</span></dd>
+            <dd><i class="layui-icon layui-icon-set"></i><span>我的消息</span></dd>
+            <dd><i class="layui-icon layui-icon-home"></i><span>我的主页</span></dd>
+            <dd>
+              <span>退出</span>
+            </dd>
+          </dl>
+        </template>
+      </div>
     </div>
   </div>
 </template>
 <script>
 export default {
   name: 'Header',
+  data() {
+    return {
+      isShow: false,
+      showInterval: null
+    }
+  },
   computed: {
     userInfo() {
-      return this.$store.state.userInfo
+      return this.$store.state.userInfo || { username: '', isVip: 0, nick: '', pic: '' }
     },
     isLogin() {
       return this.$store.state.isLogin
+    }
+  },
+  methods: {
+    show() {
+      console.log('show')
+      clearTimeout(this.showInterval)
+      this.showInterval = setTimeout(() => {
+        this.isShow = true
+      }, 200)
+    },
+    hide() {
+      console.log('hide')
+      clearTimeout(this.showInterval)
+      this.showInterval = setTimeout(() => {
+        this.isShow = false
+      }, 500)
     }
   },
   mounted() {}
@@ -57,6 +104,32 @@ export default {
       position absolute
       right 0
       height 60px
+    .user-list
+      position absolute
+      right 0
+      height 60px
+      .user-info
+        display flex
+        align-items center
+        height 100%
+        >img
+          height 80%
+          border-radius 50%
+        .layui-badge
+          position relative
+        a, p
+          padding 0 2px 0 2px
+        p
+          font-size 20px
+      .layui-nav-child
+        display block
+        dd
+          display flex
+          justify-content center
+          cursor pointer
+          color #999
+          i, span
+            margin-right 5px
   .icon-contact:before
     content '\e6b7'
   .icon-demo:before
