@@ -1,5 +1,5 @@
 <template>
-  <div class="center-item">
+  <div class="center-item fly-user-main">
     <div class="layui-cintrainer">
       <div class="layui-row title">
         <p>Hi,Admin,你已经是我们的会员了</p>
@@ -87,8 +87,9 @@ export default {
   .center-item
     margin-left 0px !important
 .center-item
-  margin-left 252px
+  margin-left 222px
   background white
+  padding-bottom 10px
   .title
     padding 20px 0px
     >p

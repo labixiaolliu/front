@@ -8,13 +8,18 @@ const Forget = () => import(/* webpackChunkName: 'Forget' */ '../views/Forget.vu
 const index = () => import(/* webpackChunkName: 'index' */ '../views/channels/index.vue')
 const Template = () => import(/* webpackChunkName: 'template' */ '../views/channels/Template.vue')
 const Center = () => import(/* webpackChunkName: 'center' */ '../views/Center.vue')
-const UserHome = () => import(/* webpackChunkName: 'center' */ '../views/UserHome.vue')
+const UserHome = () => import(/* webpackChunkName: 'userHome' */ '../views/UserHome.vue')
 
-const UserCenter = () => import(/* webpackChunkName: 'center' */ '../components/user/Center.vue')
-const UserMsg = () => import(/* webpackChunkName: 'center' */ '../components/user/Msg.vue')
-const UserPost = () => import(/* webpackChunkName: 'center' */ '../components/user/Post.vue')
-const UserProduct = () => import(/* webpackChunkName: 'center' */ '../components/user/Product.vue')
-const UserSetting = () => import(/* webpackChunkName: 'center' */ '../components/user/Setting.vue')
+const UserCenter = () => import(/* webpackChunkName: 'userCenter' */ '../components/user/Center.vue')
+const UserMsg = () => import(/* webpackChunkName: 'msg' */ '../components/user/Msg.vue')
+const UserPost = () => import(/* webpackChunkName: 'post' */ '../components/user/Post.vue')
+const UserProduct = () => import(/* webpackChunkName: 'product' */ '../components/user/Product.vue')
+const UserSetting = () => import(/* webpackChunkName: 'setting' */ '../components/user/Setting.vue')
+
+const PicUpload = () => import(/* webpackChunkName: 'picUpload' */ '../components/user/common/PicUpload.vue')
+const Password = () => import(/* webpackChunkName: 'password' */ '../components/user/common/Password.vue')
+const MyInfo = () => import(/* webpackChunkName: 'myInfo' */ '../components/user/common/MyInfo.vue')
+const Account = () => import(/* webpackChunkName: 'account' */ '../components/user/common/Account.vue')
 
 Vue.use(VueRouter)
 
@@ -86,7 +91,29 @@ const routes = [
       {
         path: '/setting',
         name: 'userSetting',
-        component: UserSetting
+        component: UserSetting,
+        children: [
+          {
+            path: '',
+            name: 'myInfo',
+            component: MyInfo
+          },
+          {
+            path: 'password',
+            name: 'password',
+            component: Password
+          },
+          {
+            path: 'picUpload',
+            name: 'picUpload',
+            component: PicUpload
+          },
+          {
+            path: 'account',
+            name: 'account',
+            component: Account
+          }
+        ]
       }
     ]
   },
