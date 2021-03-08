@@ -45,7 +45,8 @@ export default {
         {
           name: '我的帖子',
           icon: 'icon-document',
-          link: 'userPost'
+          link: 'myPost',
+          activeClass: 'layui-this'
         }
       ]
     }

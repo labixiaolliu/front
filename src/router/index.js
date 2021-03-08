@@ -21,6 +21,9 @@ const Password = () => import(/* webpackChunkName: 'password' */ '../components/
 const MyInfo = () => import(/* webpackChunkName: 'myInfo' */ '../components/user/common/MyInfo.vue')
 const Account = () => import(/* webpackChunkName: 'account' */ '../components/user/common/Account.vue')
 
+const MyPost = () => import(/* webpackChunkName: 'myPost' */ '../components/user/common/MyPost.vue')
+const MyCollection = () => import(/* webpackChunkName: 'myCollection' */ '../components/user/common/MyCollection.vue')
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -81,7 +84,19 @@ const routes = [
       {
         path: '/post',
         name: 'userPost',
-        component: UserPost
+        component: UserPost,
+        children: [
+          {
+            path: '',
+            name: 'myPost',
+            component: MyPost
+          },
+          {
+            path: 'myCollection',
+            name: 'myCollection',
+            component: MyCollection
+          }
+        ]
       },
       {
         path: '/product',
