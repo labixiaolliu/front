@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import store from '@/store'
+import jwt from 'jsonwebtoken'
+import moment from 'moment'
 
 const Login = () => import(/* webpackChunkName: 'Login' */ '../views/Login.vue')
 const Reg = () => import(/* webpackChunkName: 'Reg' */ '../views/Reg.vue')
@@ -68,7 +71,6 @@ const routes = [
   },
   {
     path: '/center',
-    name: 'center',
     component: Center,
     children: [
       {
@@ -83,7 +85,6 @@ const routes = [
       },
       {
         path: '/post',
-        name: 'userPost',
         component: UserPost,
         children: [
           {
@@ -105,7 +106,6 @@ const routes = [
       },
       {
         path: '/setting',
-        name: 'userSetting',
         component: UserSetting,
         children: [
           {
@@ -130,7 +130,8 @@ const routes = [
           }
         ]
       }
-    ]
+    ],
+    meta: { requiresAuth: true }
   },
   {
     path: '/userHome',
@@ -142,6 +143,42 @@ const routes = [
 const router = new VueRouter({
   linkExactActiveClass: 'layui-this',
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  // const isLogin = store.state.isLogin
+  const token = localStorage.getItem('token')
+  const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+  if (token !== '' && token !== null) {
+    let payload = jwt.decode(token)
+    // 未过期
+    console.log(moment())
+    console.log(moment(payload.exp * 1000))
+    moment().isBefore(moment(payload.exp * 1000))
+    if (moment().isBefore(moment(payload.exp * 1000))) {
+      store.commit('setToken', token)
+      store.commit('setUserInfo', userInfo)
+      store.commit('setIsLogin', true)
+    } else {
+      localStorage.clear()
+      store.commit('setToken', '')
+      store.commit('setUserInfo', '')
+      store.commit('setIsLogin', false)
+    }
+  }
+
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    // 需要登陆才能访问
+    const isLogin = store.state.isLogin
+    if (isLogin) {
+      // 已经登陆
+      next()
+    } else {
+      next('/login')
+    }
+  } else {
+    next()
+  }
 })
 
 export default router

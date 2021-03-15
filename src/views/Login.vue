@@ -136,6 +136,7 @@ export default {
                 this.code = ''
                 this.$store.commit('setIsLogin', true)
                 this.$store.commit('setUserInfo', res.data)
+                this.$store.commit('setToken', res.token)
                 this.$nextTick(() => {
                   this.$refs.form.reset()
                   this.$router.push({ name: 'index' })

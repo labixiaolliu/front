@@ -42,7 +42,7 @@
             <dd><i class="layui-icon layui-icon-email"></i><span>基本设置</span></dd>
             <dd><i class="layui-icon layui-icon-set"></i><span>我的消息</span></dd>
             <dd><i class="layui-icon layui-icon-home"></i><span>我的主页</span></dd>
-            <dd>
+            <dd @click="logout">
               <span>退出</span>
             </dd>
           </dl>
@@ -82,6 +82,19 @@ export default {
       this.showInterval = setTimeout(() => {
         this.isShow = false
       }, 500)
+    },
+    logout() {
+      this.$confirm(
+        '确定退出么？',
+        () => {
+          localStorage.clear()
+          this.$store.commit('setToken', '')
+          this.$store.commit('setUserInfo', '')
+          this.$store.commit('setIsLogin', false)
+          this.$router.push({ name: 'index' })
+        },
+        () => {}
+      )
     }
   },
   mounted() {}
