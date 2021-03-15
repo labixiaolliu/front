@@ -70,14 +70,12 @@ export default {
   },
   methods: {
     show() {
-      console.log('show')
       clearTimeout(this.showInterval)
       this.showInterval = setTimeout(() => {
         this.isShow = true
       }, 200)
     },
     hide() {
-      console.log('hide')
       clearTimeout(this.showInterval)
       this.showInterval = setTimeout(() => {
         this.isShow = false
@@ -91,7 +89,11 @@ export default {
           this.$store.commit('setToken', '')
           this.$store.commit('setUserInfo', '')
           this.$store.commit('setIsLogin', false)
-          this.$router.push({ name: 'index' })
+          console.log(this.$router)
+          console.log(this.$route.name)
+          if (this.$route.name !== 'index') {
+            this.$router.push({ name: 'index' })
+          }
         },
         () => {}
       )

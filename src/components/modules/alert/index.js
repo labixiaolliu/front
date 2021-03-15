@@ -13,11 +13,11 @@ Alert.install = (Vue) => {
     instance.isShow = true
     instance.type = 'alert'
   }
-  Vue.prototype.$confirm = (msg, success, cancel) => {
+  Vue.prototype.$confirm = (msg, successFunc, cancel) => {
     instance.message = msg
     instance.isShow = true
-    if (typeof success !== 'undefined') {
-      instance.success = success
+    if (typeof successFunc !== 'undefined') {
+      instance.successFunc = successFunc
     }
     if (typeof cancel !== 'undefined') {
       instance.cancel = cancel

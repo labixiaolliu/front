@@ -28,7 +28,7 @@ export default {
       type: String,
       default: 'alert'
     },
-    success: {
+    successFunc: {
       type: Function,
       default: () => {
         console.log('点击sucess！！')
@@ -55,7 +55,7 @@ export default {
       this.close()
     },
     confirmSubmit() {
-      this.success()
+      this.successFunc()
       this.close()
     }
   }
