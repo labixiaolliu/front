@@ -13,6 +13,18 @@
         <div class="layui-input-inline">
           <input type="text" name="title" autocomplete="off" class="layui-input" />
         </div>
+        <div class="layui-input-inline custom1">
+          <label for="gender1" class="custom2">
+            <input v-model="gender" id="gender1" type="radio" name="sex" value="0" title="男" />
+            <i class="layui-icon layui-icon-circle" :class="{ 'layui-icon-radio': gender === '0' }"></i>
+            男
+          </label>
+          <label for="gender2">
+            <input v-model="gender" id="gender2" type="radio" name="sex" value="1" title="女" />
+            <i class="layui-icon layui-icon-circle" :class="{ 'layui-icon-radio': gender === '1' }"></i>
+            女
+          </label>
+        </div>
       </div>
       <div class="layui-form-item">
         <label class="layui-form-label">城市</label>
@@ -42,7 +54,9 @@
 export default {
   name: 'MyInfo',
   data() {
-    return {}
+    return {
+      gender: '0'
+    }
   }
 }
 </script>
@@ -53,4 +67,10 @@ export default {
   .sign
     width 100%
     text-align left
+  .custom1
+    padding-top 8px
+    >.custom2
+      padding-right 16px
+  .layui-icon-radio
+    color #56cf79
 </style>

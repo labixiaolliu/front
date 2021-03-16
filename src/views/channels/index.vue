@@ -1,11 +1,11 @@
 <template>
   <div class="layui-container">
     <div class="layui-row layui-col-space15">
-      <div class="layui-col-xs8 layui-col-sm8 layui-col-md8">
+      <div class="layui-col-xs12 layui-col-sm12 layui-col-md8">
         <gg-top></gg-top>
         <gg-list></gg-list>
       </div>
-      <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+      <div class="layui-col-xs12 layui-col-sm12 layui-col-md4">
         <gg-tips></gg-tips>
         <gg-sign></gg-sign>
         <gg-hot></gg-hot>
