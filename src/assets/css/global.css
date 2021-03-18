@@ -555,3 +555,4 @@ body .fly-user-main{position: relative; min-height: 600px;}
 
 .pull-right {float: right;}
 .orange {color: #ff8300;}
+.layui-input-inline{width: auto}

@@ -12,4 +12,8 @@ const updateUsername = (param) => {
   return axios.get('public/resetEmail?' + qs.stringify(param))
 }
 
-export { userSign, updateUserInfo, updateUsername }
+const updatePassword = (param) => {
+  return axios.get('public/resetPassword?' + qs.stringify(param))
+}
+
+export { userSign, updateUserInfo, updateUsername, updatePassword }

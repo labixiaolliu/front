@@ -23,7 +23,7 @@ function login(useInfo) {
 }
 
 async function forget(params) {
-  return axios.post('/forget', params)
+  return axios.post('/login/forget', params)
 }
 
 async function register(userInfo) {

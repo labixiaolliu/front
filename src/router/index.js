@@ -28,6 +28,7 @@ const MyPost = () => import(/* webpackChunkName: 'myPost' */ '../components/user
 const MyCollection = () => import(/* webpackChunkName: 'myCollection' */ '../components/user/common/MyCollection.vue')
 const NotFound = () => import(/* webpackChunkName: 'notFound' */ '../components/NotFound.vue')
 const Reset = () => import(/* webpackChunkName: 'reset' */ '../components/Reset.vue')
+const ResetPassword = () => import(/* webpackChunkName: 'restPassword' */ '../views/ResetPassword.vue')
 
 Vue.use(VueRouter)
 
@@ -144,6 +145,11 @@ const routes = [
     path: '/reset',
     name: 'reset',
     component: Reset
+  },
+  {
+    path: '/resetPassword',
+    name: 'resetPassword',
+    component: ResetPassword
   },
   {
     path: '/404',

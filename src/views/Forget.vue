@@ -36,7 +36,7 @@
                   type="text"
                   name="title"
                   v-model="code"
-                  placeholder="请输入用户名"
+                  placeholder="请输入验证码"
                   autocomplete="off"
                   class="layui-input"
                 />
@@ -89,9 +89,17 @@ export default {
         if (!success) {
           return
         } else {
-          forget({ user: this.user, code: this.code }).then((res) => {
+          forget({ user: this.user, code: this.code, sid: this.$store.state.sid }).then((res) => {
             if (res.code === 200) {
-              alert('邮件发送成功')
+              this.$alert('邮件已经发送到邮箱，请验收！')
+            } else if (res.code === 502) {
+              this.$refs.form.setErrors({
+                code: [res.msg]
+              })
+            } else if (res.code === 501) {
+              this.$refs.form.setErrors({
+                name: [res.msg]
+              })
             }
           })
         }
