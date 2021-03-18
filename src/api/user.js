@@ -1,12 +1,15 @@
 import axios from '../utils/request'
-import store from '@/store'
+import qs from 'qs'
 
 const userSign = () => {
-  const headers = {
-    Authorization: 'Bearer ' + store.state.token,
-    'Content-Type': 'application/json'
-  }
-  return axios.get('/user/fav', { headers })
+  return axios.get('/user/fav')
+}
+const updateUserInfo = (param) => {
+  return axios.post('user/basic', param)
 }
 
-export { userSign }
+const updateUsername = (param) => {
+  return axios.get('public/resetEmail?' + qs.stringify(param))
+}
+
+export { userSign, updateUserInfo, updateUsername }

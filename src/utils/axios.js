@@ -1,5 +1,7 @@
 import axios from 'axios'
 import errorHandle from './errorHandle'
+import publicConfig from '@/config'
+import store from '@/store'
 const CancelToken = axios.CancelToken
 class HttpRequest {
   constructor(baseUrl) {
@@ -25,7 +27,16 @@ class HttpRequest {
   interceptor(instance) {
     instance.interceptors.request.use(
       (config) => {
-        // Do something before request is sent
+        // 发请求之前的处理
+        let isPublic = false
+        publicConfig.publicPath.map((path) => {
+          isPublic = isPublic || path.test(config.url)
+        })
+        const token = store.state.token
+        if (!isPublic && token) {
+          config.headers.Authorization = 'Bearer ' + token
+        }
+
         let key = config.url + '&' + config.method
         console.log('key:' + key)
         this.removePending(key, true)
