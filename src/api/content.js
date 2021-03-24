@@ -24,4 +24,9 @@ const getTop = () => {
   return axios.get('/public/topWeek')
 }
 
-export { getList, getTips, getTop, getLinks }
+// 图片上传
+const uploadPic = (formData) => {
+  return axios.post('/content/uploadImg', formData)
+}
+
+export { getList, getTips, getTop, getLinks, uploadPic }

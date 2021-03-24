@@ -34,7 +34,8 @@ localize('zh_CN', {
     code: '验证码',
     nick: '昵称',
     repassword: '重复密码',
-    username: '邮箱'
+    username: '邮箱',
+    oldpassword: '密码'
   },
   fields: {
     password: {
