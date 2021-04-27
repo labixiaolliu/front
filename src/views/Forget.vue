@@ -56,34 +56,18 @@
 
 <script>
 import '../local/zh'
-import { ValidationProvider, ValidationObserver } from 'vee-validate'
-import { getCode, forget } from '../api/login'
+import { forget } from '../api/login'
+import contentListMixins from '../mixins/contentListMixins'
 
 export default {
   name: 'Forget',
-  components: {
-    ValidationProvider,
-    ValidationObserver
-  },
+  mixins: [contentListMixins],
   data() {
     return {
-      user: '',
-      code: '',
-      validateCode: ''
+      user: ''
     }
   },
-  mounted() {
-    this._getCode()
-  },
   methods: {
-    _getCode() {
-      let sid = this.$store.state.sid
-      getCode(sid).then((res) => {
-        if (res.code === 200) {
-          this.validateCode = res.data
-        }
-      })
-    },
     submit() {
       this.$refs.form.validate().then((success) => {
         if (!success) {

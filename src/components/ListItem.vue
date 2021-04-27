@@ -73,8 +73,12 @@
 </template>
 <script>
 import _ from 'lodash'
-import moment from 'moment'
-import 'moment/locale/zh-cn'
+// import moment from 'moment'
+// import 'moment/locale/zh-cn'
+import moment from 'dayjs'
+import 'dayjs/locale/zh-cn'
+import relativeTime from 'dayjs/plugin/relativeTime'
+moment.extend(relativeTime)
 export default {
   name: 'ListItem',
   props: {
@@ -117,7 +121,9 @@ export default {
       if (moment(date).isBefore(moment().subtract(7, 'days'))) {
         return moment(date).format('YYYY-MM-DD')
       } else {
-        return moment(date).from(moment())
+        return moment(date)
+          .locale('zh-cn')
+          .from(moment())
       }
     }
   },

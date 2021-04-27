@@ -29,4 +29,9 @@ const uploadPic = (formData) => {
   return axios.post('/content/uploadImg', formData)
 }
 
-export { getList, getTips, getTop, getLinks, uploadPic }
+// 帖子发布
+const addPost = (param) => {
+  return axios.post('/content/addPost', { ...param })
+}
+
+export { getList, getTips, getTop, getLinks, uploadPic, addPost }

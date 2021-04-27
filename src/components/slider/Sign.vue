@@ -64,7 +64,7 @@ export default {
   },
   computed: {
     isSign() {
-      return this.$store.state.userInfo.isSign ? this.$store.state.userInfo.isSign : false
+      return this.$store.state.userInfo && this.$store.state.userInfo.isSign ? this.$store.state.userInfo.isSign : false
     },
     count() {
       if (this.isLogin) {
@@ -151,14 +151,21 @@ export default {
             user.count = res.count
             this.$pop('', '签到成功！')
             // const newUser = this.$store.state.userInfo
+            let tomorrowStr = moment()
+              .add(1, 'day')
+              .format('YYYY-MM-DD 00:00:00')
+            let tomorrow = moment(tomorrowStr)
+            this.seconds = tomorrow.diff(moment(), 'seconds')
+            this.secondInterval = setInterval(() => {
+              this.seconds--
+            }, 1000)
+            user.lastSign = res.lastSign
+            this.$store.commit('setUserInfo', user)
+          } else if (res.code === 401) {
+            this.$router.push({ name: 'login' })
           }
-          user.lastSign = res.lastSign
-          this.$store.commit('setUserInfo', user)
         })
       } else {
-        console.log(this)
-        console.log(this.$alert)
-        console.log(this.$pop)
         this.$pop('shake', '请先登录')
       }
     }
@@ -168,7 +175,8 @@ export default {
     const userInfo = this.$store.state.userInfo
     if (userInfo.lastSign && moment().diff(moment(userInfo.lastSign), 'days') > 0) {
       // 又过一天了，可以再次签到了
-      this.userInfo.isSign = true
+      userInfo.isSign = false
+      console.log(7)
       this.$store.commit('setUserInfo', userInfo)
     } else {
       let tomorrowStr = moment()
@@ -176,7 +184,6 @@ export default {
         .format('YYYY-MM-DD 00:00:00')
       let tomorrow = moment(tomorrowStr)
       this.seconds = tomorrow.diff(moment(), 'seconds')
-      // this.seconds = 5
       this.secondInterval = setInterval(() => {
         this.seconds--
       }, 1000)

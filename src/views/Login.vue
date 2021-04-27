@@ -78,44 +78,19 @@
 </template>
 
 <script>
-import { ValidationProvider, ValidationObserver } from 'vee-validate'
-import { getCode, login } from '../api/login'
-import { v4 as uuidv4 } from 'uuid'
+import { login } from '../api/login'
+import codeMixins from '../mixins/codeMixins'
 
 export default {
   name: 'Login',
-  components: {
-    ValidationProvider,
-    ValidationObserver
-  },
+  mixins: [codeMixins],
   data() {
     return {
-      validateCode: '',
       name: '',
-      password: '',
-      code: ''
+      password: ''
     }
-  },
-  mounted() {
-    let sid = ''
-    if (!localStorage.getItem('sid')) {
-      sid = uuidv4()
-      localStorage.setItem('sid', sid)
-    } else {
-      sid = localStorage.getItem('sid')
-    }
-    this.$store.commit('setSid', sid)
-    this._getCode()
   },
   methods: {
-    _getCode() {
-      let sid = this.$store.state.sid
-      getCode(sid).then((res) => {
-        if (res.code === 200) {
-          this.validateCode = res.data
-        }
-      })
-    },
     submit() {
       this.$refs.form.validate().then((success) => {
         if (!success) {

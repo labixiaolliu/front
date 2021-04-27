@@ -18,7 +18,7 @@
     </div>
     <div class="right-panel layui-hide-xs">
       <span class="layui-icon layui-icon-search"></span>
-      <a href="" class="layui-btn">发表新帖</a>
+      <router-link tag="a" class="layui-btn" :to="{ name: 'Add' }">发表新帖</router-link>
     </div>
   </div>
 </template>

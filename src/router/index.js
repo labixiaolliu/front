@@ -30,6 +30,8 @@ const NotFound = () => import(/* webpackChunkName: 'notFound' */ '../components/
 const Reset = () => import(/* webpackChunkName: 'reset' */ '../components/Reset.vue')
 const ResetPassword = () => import(/* webpackChunkName: 'restPassword' */ '../views/ResetPassword.vue')
 
+const Add = () => import(/* webpackChunkName: 'Add' */ '../components/contents/Add.vue')
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -71,6 +73,12 @@ const routes = [
     path: '/forget',
     name: 'forget',
     component: Forget
+  },
+  {
+    path: '/add',
+    name: 'Add',
+    component: Add,
+    meta: { requiresAuth: true }
   },
   {
     path: '/center',

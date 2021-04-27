@@ -74,34 +74,19 @@
   </div>
 </template>
 <script>
-import { getCode } from '../api/login'
-import { ValidationProvider, ValidationObserver } from 'vee-validate'
-import { v4 as uuidv4 } from 'uuid'
 import { updatePassword } from '../api/user'
+import codeMixins from '../mixins/codeMixins'
 let obj = {}
 export default {
   name: 'RestPassword',
-  components: {
-    ValidationProvider,
-    ValidationObserver
-  },
   data() {
     return {
       password: '',
-      repassword: '',
-      code: '',
-      validateCode: ''
+      repassword: ''
     }
   },
+  mixins: [codeMixins],
   methods: {
-    _getCode() {
-      let sid = this.$store.state.sid
-      getCode(sid).then((res) => {
-        if (res.code === 200) {
-          this.validateCode = res.data
-        }
-      })
-    },
     submit() {
       this.$refs.form.validate().then((success) => {
         if (success) {
@@ -135,15 +120,8 @@ export default {
     }
   },
   mounted() {
-    let sid = ''
-    if (!localStorage.getItem('sid')) {
-      sid = uuidv4()
-      localStorage.setItem('sid', sid)
-      this.$store.commit('setSid', sid)
-    }
     let query = window.location.href.replace(/.*\?/, '')
     obj = Object.fromEntries(query.split('&').map((item) => item.split('=')))
-    this._getCode()
   }
 }
 </script>

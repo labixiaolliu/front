@@ -1,5 +1,5 @@
 import { extend, localize } from 'vee-validate'
-import { required, email, min, length, confirmed, is } from 'vee-validate/dist/rules'
+import { required, email, min, length, confirmed, is, is_not } from 'vee-validate/dist/rules'
 
 import zh from 'vee-validate/dist/locale/zh_CN.json'
 
@@ -9,6 +9,7 @@ extend('min', min)
 extend('length', length)
 extend('confirmed', confirmed)
 extend('is', is)
+extend('is_not', is_not)
 extend('mixChart', {
   validate: (value) => {
     let reg = /^[0-9]+$/
@@ -35,7 +36,9 @@ localize('zh_CN', {
     nick: '昵称',
     repassword: '重复密码',
     username: '邮箱',
-    oldpassword: '密码'
+    oldpassword: '密码',
+    title: '标题',
+    catalog: '分类'
   },
   fields: {
     password: {
@@ -44,6 +47,9 @@ localize('zh_CN', {
     },
     repassword: {
       is: '和密码不一致哦'
+    },
+    catalog: {
+      is_not: '{_field_}还没有选择'
     }
   }
 })

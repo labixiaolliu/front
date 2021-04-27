@@ -114,37 +114,21 @@
 
 <script>
 import '../local/zh'
-import { ValidationProvider, ValidationObserver } from 'vee-validate'
-import { getCode, register } from '../api/login'
+import codeMixins from '../mixins/codeMixins'
+import { register } from '../api/login'
 
 export default {
   name: 'Reg',
-  components: {
-    ValidationProvider,
-    ValidationObserver
-  },
+  mixins: [codeMixins],
   data() {
     return {
-      validateCode: '',
       repassword: '',
       name: '',
       password: '',
-      code: '',
       nick: ''
     }
   },
-  mounted() {
-    this._getCode()
-  },
   methods: {
-    _getCode() {
-      let sid = this.$store.state.sid
-      getCode(sid).then((res) => {
-        if (res.code === 200) {
-          this.validateCode = res.data
-        }
-      })
-    },
     submitReg() {
       this.$refs.form.validate().then((success) => {
         if (!success) {

@@ -8,7 +8,8 @@ export default new Vuex.Store({
     sid: '',
     isLogin: false,
     token: '',
-    userInfo: {}
+    userInfo: {},
+    isHide: false
   },
   mutations: {
     setSid(state, value) {
@@ -25,6 +26,9 @@ export default new Vuex.Store({
       state.userInfo = value
       if (value === '') return
       localStorage.setItem('userInfo', JSON.stringify(value))
+    },
+    setIsHide(state, value) {
+      state.isHide = value
     }
   },
   actions: {},
