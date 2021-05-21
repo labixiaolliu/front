@@ -31,6 +31,7 @@ const Reset = () => import(/* webpackChunkName: 'reset' */ '../components/Reset.
 const ResetPassword = () => import(/* webpackChunkName: 'restPassword' */ '../views/ResetPassword.vue')
 
 const Add = () => import(/* webpackChunkName: 'Add' */ '../components/contents/Add.vue')
+const Detail = () => import(/* webpackChunkName: 'Detail' */ '../components/contents/Detail.vue')
 
 Vue.use(VueRouter)
 
@@ -78,6 +79,13 @@ const routes = [
     path: '/add',
     name: 'Add',
     component: Add,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/detail/:tid',
+    name: 'Detail',
+    component: Detail,
+    props: true,
     meta: { requiresAuth: true }
   },
   {

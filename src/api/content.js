@@ -34,4 +34,9 @@ const addPost = (param) => {
   return axios.post('/content/addPost', { ...param })
 }
 
-export { getList, getTips, getTop, getLinks, uploadPic, addPost }
+// 获取帖子详情
+const getPostById = (tid) => {
+  return axios.get('/public/content/getPost?tid=' + tid)
+}
+
+export { getList, getTips, getTop, getLinks, uploadPic, addPost, getPostById }

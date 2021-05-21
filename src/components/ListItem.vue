@@ -1,7 +1,8 @@
 <template>
   <div>
     <ul>
-      <li v-for="(item, index) of items" :key="'list' + index">
+      <!-- <router-link tag="li" v-for="(item, index) of items" :key="'list' + index" :to="'/'" class="ll"> -->
+      <li v-for="(item, index) of items" :key="'list' + index" @click="toPostDetail(item)">
         <img :src="item.uid.pic" />
         <div class="left-item">
           <div class="top">
@@ -34,6 +35,7 @@
           </div>
         </div>
       </li>
+      <!-- </router-link> -->
       <!-- <li>
         <img src="../assets/images/avatar/0.jpg" />
         <div class="left-item">
@@ -75,10 +77,10 @@
 import _ from 'lodash'
 // import moment from 'moment'
 // import 'moment/locale/zh-cn'
-import moment from 'dayjs'
-import 'dayjs/locale/zh-cn'
-import relativeTime from 'dayjs/plugin/relativeTime'
-moment.extend(relativeTime)
+// import moment from 'dayjs'
+// import 'dayjs/locale/zh-cn'
+// import relativeTime from 'dayjs/plugin/relativeTime'
+// moment.extend(relativeTime)
 export default {
   name: 'ListItem',
   props: {
@@ -115,21 +117,26 @@ export default {
       return this.list
     }
   },
-  filters: {
-    moment(date) {
-      // 七天前，显示具体时间
-      if (moment(date).isBefore(moment().subtract(7, 'days'))) {
-        return moment(date).format('YYYY-MM-DD')
-      } else {
-        return moment(date)
-          .locale('zh-cn')
-          .from(moment())
-      }
-    }
-  },
+  // filters: {
+  //   moment(date) {
+  //     // 七天前，显示具体时间
+  //     if (moment(date).isBefore(moment().subtract(7, 'days'))) {
+  //       return moment(date).format('YYYY-MM-DD')
+  //     } else {
+  //       return moment(date)
+  //         .locale('zh-cn')
+  //         .from(moment())
+  //     }
+  //   }
+  // },
   methods: {
     more() {
       this.$emit('nextPage')
+    },
+    toPostDetail(item) {
+      // alert(1)
+      // console.log(item)
+      this.$router.push({ path: '/detail/' + item._id })
     }
   }
 }

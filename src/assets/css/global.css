@@ -557,3 +557,9 @@ body .fly-user-main{position: relative; min-height: 600px;}
 .orange {color: #ff8300;}
 .layui-input-inline{width: auto}
 .pre-hide{position: absolute !important;overflow: hidden !important;height: 50% !important;}
+.text-left {text-align: left;}
+.text-center{text-align: center;}
+.text-right{text-align: right;}
+.flex-start{justify-content: flex-start;}
+.flex-center{justify-content: center;}
+.flex-end{justify-content: flex-end;}
