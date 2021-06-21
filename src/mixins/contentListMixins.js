@@ -8,7 +8,6 @@ const contentListMixins = {
   methods: {
     _getList() {
       this.isLoad = true
-      console.log('status: ' + this.status)
       let opation = {
         page: this.page,
         limit: this.limit,

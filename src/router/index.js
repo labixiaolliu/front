@@ -31,6 +31,7 @@ const Reset = () => import(/* webpackChunkName: 'reset' */ '../components/Reset.
 const ResetPassword = () => import(/* webpackChunkName: 'restPassword' */ '../views/ResetPassword.vue')
 
 const Add = () => import(/* webpackChunkName: 'Add' */ '../components/contents/Add.vue')
+const Edit = () => import(/* webpackChunkName: 'Edit' */ '../components/contents/Edit.vue')
 const Detail = () => import(/* webpackChunkName: 'Detail' */ '../components/contents/Detail.vue')
 
 Vue.use(VueRouter)
@@ -82,11 +83,17 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
-    path: '/detail/:tid',
-    name: 'Detail',
-    component: Detail,
+    path: '/edit/:tid',
     props: true,
+    name: 'Edit',
+    component: Edit,
     meta: { requiresAuth: true }
+  },
+  {
+    path: '/detail/:tid',
+    props: true,
+    name: 'Detail',
+    component: Detail
   },
   {
     path: '/center',
@@ -153,7 +160,8 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
-    path: '/userHome',
+    path: '/userHome/:uid',
+    props: true,
     name: 'userHome',
     component: UserHome
   },
@@ -189,8 +197,6 @@ router.beforeEach((to, from, next) => {
   if (token !== '' && token !== null) {
     let payload = jwt.decode(token)
     // 未过期
-    console.log(moment())
-    console.log(moment(payload.exp * 1000))
     moment().isBefore(moment(payload.exp * 1000))
     if (moment().isBefore(moment(payload.exp * 1000))) {
       store.commit('setToken', token)

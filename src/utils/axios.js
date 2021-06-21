@@ -38,7 +38,6 @@ class HttpRequest {
         }
 
         let key = config.url + '&' + config.method
-        console.log('key:' + key)
         this.removePending(key, true)
         config.cancelToken = new CancelToken((c) => {
           this.pending[key] = c

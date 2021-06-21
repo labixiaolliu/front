@@ -63,6 +63,9 @@ export default {
     }
   },
   computed: {
+    userInfo() {
+      return this.$store.state.userInfo
+    },
     isSign() {
       return this.$store.state.userInfo && this.$store.state.userInfo.isSign ? this.$store.state.userInfo.isSign : false
     },
@@ -118,6 +121,12 @@ export default {
       }
     }
   },
+  watch: {
+    userInfo() {
+      console.log(1)
+      this.judgeSign()
+    }
+  },
   methods: {
     formatLastTime(seconds) {
       let dur = moment.duration(seconds, 'seconds')
@@ -168,26 +177,29 @@ export default {
       } else {
         this.$pop('shake', '请先登录')
       }
+    },
+    judgeSign() {
+      // 当已签到的时候，去判断当前日期和签到日期是否有时间差，有的话说明又可以签到了
+      const userInfo = this.$store.state.userInfo
+      if (userInfo.lastSign && moment().diff(moment(userInfo.lastSign), 'days') > 0) {
+        // 又过一天了，可以再次签到了
+        userInfo.isSign = false
+        this.$store.commit('setUserInfo', userInfo)
+      } else {
+        let tomorrowStr = moment()
+          .add(1, 'day')
+          .format('YYYY-MM-DD 00:00:00')
+        let tomorrow = moment(tomorrowStr)
+        this.seconds = tomorrow.diff(moment(), 'seconds')
+        this.secondInterval = setInterval(() => {
+          this.seconds--
+        }, 1000)
+      }
     }
   },
   mounted() {
-    // 当已签到的时候，去判断当前日期和签到日期是否有时间差，有的话说明又可以签到了
-    const userInfo = this.$store.state.userInfo
-    if (userInfo.lastSign && moment().diff(moment(userInfo.lastSign), 'days') > 0) {
-      // 又过一天了，可以再次签到了
-      userInfo.isSign = false
-      console.log(7)
-      this.$store.commit('setUserInfo', userInfo)
-    } else {
-      let tomorrowStr = moment()
-        .add(1, 'day')
-        .format('YYYY-MM-DD 00:00:00')
-      let tomorrow = moment(tomorrowStr)
-      this.seconds = tomorrow.diff(moment(), 'seconds')
-      this.secondInterval = setInterval(() => {
-        this.seconds--
-      }, 1000)
-    }
+    console.log(2)
+    this.judgeSign()
   }
 }
 </script>

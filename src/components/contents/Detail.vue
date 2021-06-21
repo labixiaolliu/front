@@ -7,7 +7,7 @@
           <div class="layui-content">
             <div class="poster">
               <div class="title-header">
-                <h1>Imooc社区，基于layui的极简社区页面模板</h1>
+                <h1>{{ post.title }}</h1>
                 <div class="layui-btns">
                   <div class="layui-btn-container">
                     <button v-if="post.catalog === 'ask'" type="button" class="layui-btn layui-btn-xs">提问</button>
@@ -60,13 +60,25 @@
               </div>
               <div class="poster-msg">
                 <div class="layui-msgs">
-                  <img :src="post.uid ? post.uid.pic : '/resource/avatar.jpg'" class="poster-avatar" />
+                  <!-- <img :src="post.user ? post.user.pic : '/resource/avatar.jpg'" class="poster-avatar" /> -->
+                  <router-link
+                    class="poster-avatar"
+                    tag="img"
+                    :src="post.user.pic"
+                    v-if="post.user"
+                    :to="{ name: 'userHome', params: { uid: post.user._id } }"
+                  ></router-link>
+                  <img v-else src="/resource/avatar.jpg" class="poster-avatar" />
                   <div class="post-msg">
                     <div>
-                      <span class="name">{{ post.uid ? post.uid.username : '' }}</span>
-                      <i class="iconfont icon-renzheng" title="认证信息" v-if="post.uid && post.uid.isVip !== '0'"></i>
-                      <i class="layui-badge fly-badge-vip layui-hide-xs" v-if="post.uid && post.uid.isVip !== '0'"
-                        >VIP{{ post.uid.isVip }}</i
+                      <span class="name">{{ post.user ? post.user.nick : '' }}</span>
+                      <i
+                        class="iconfont icon-renzheng"
+                        title="认证信息"
+                        v-if="post.user && post.user.isVip !== '0'"
+                      ></i>
+                      <i class="layui-badge fly-badge-vip layui-hide-xs" v-if="post.user && post.user.isVip !== '0'"
+                        >VIP{{ post.user.isVip }}</i
                       >
                       <span class="date">{{ post.created | moment }}</span>
                     </div>
@@ -76,8 +88,21 @@
                   </div>
                 </div>
                 <div class="layui-btn-container">
-                  <button type="button" class="layui-btn">编辑</button>
-                  <button type="button" class="layui-btn">收藏</button>
+                  <router-link
+                    tag="button"
+                    class="layui-btn"
+                    v-show="post.isEnd === '0' && user._id === post.user._id"
+                    :to="{ name: 'Edit', params: { tid: post._id, post: post } }"
+                    >编辑</router-link
+                  >
+                  <button
+                    type="button"
+                    class="layui-btn"
+                    :class="{ 'layui-btn-primary': post.isFav }"
+                    @click.prevent="setCollect"
+                  >
+                    {{ !post.isFav ? '收藏' : '取消收藏' }}
+                  </button>
                 </div>
               </div>
               <div class="post-content" v-html="htmlContent"></div>
@@ -88,42 +113,66 @@
               </fieldset>
               <validation-observer ref="form" v-slot="{ validate }">
                 <div class="post-list layui-row">
-                  <div class="response-li">
+                  <div class="response-li" v-for="(comment, index) of comments" :key="'comment' + index + comment._id">
                     <div class="res-content">
                       <div class="res-msgs">
-                        <img src="/resource/avatar.jpg" class="poster-avatar" />
+                        <!-- <img  class="poster-avatar" /> -->
+                        <router-link
+                          tag="img"
+                          class="poster-avatar"
+                          :src="comment.uid.pic"
+                          :to="{ name: 'userHome', params: { uid: comment.uid._id } }"
+                        ></router-link>
                         <div class="response-msg">
                           <div>
-                            <span class="name">贤心</span>
-                            <i class="iconfont icon-renzheng" title="认证信息"></i>
-                            <i class="layui-badge fly-badge-vip layui-hide-xs">VIP1</i>
+                            <span class="name">{{ comment.uid.nick }}</span>
+                            <i
+                              class="iconfont icon-renzheng"
+                              title="认证信息"
+                              v-show="comment.uid.isVip && comment.uid.isVip !== '0'"
+                            ></i>
+                            <i
+                              class="layui-badge fly-badge-vip layui-hide-xs"
+                              v-show="comment.uid.isVip && comment.uid.isVip !== '0'"
+                              >VIP{{ comment.uid.isVip }}</i
+                            >
                             <span class="date"></span>
                           </div>
                           <div>
-                            <span class="fav">2018-12-12</span>
+                            <span class="fav">{{ comment.created | moment }}</span>
                           </div>
                         </div>
-                        <div class="res-detail">非常精彩，这是一条被采纳的回复</div>
+                        <!-- <div class="res-detail" v-html="excape(comment.content)"></div> -->
+                        <div class="res-detail" v-richtext="comment.content"></div>
                       </div>
-                      <img src="/resource/caina.png" class="get-icon" />
+                      <div class="get-icon" v-if="comment.isBest === '1'">
+                        <img src="/resource/caina.png" />
+                      </div>
                       <div class="res-icons">
                         <div class="icon-group">
-                          <div class="count">
-                            <i class="layui-icon layui-icon-dialogue"></i>
-                            <p>66</p>
+                          <div class="count" :class="comment.handed && comment.handed === '1' ? 'active' : ''">
+                            <i class="layui-icon layui-icon-dialogue" @click="handComment(comment)"></i>
+                            <p>{{ comment.hands }}</p>
                           </div>
-                          <div class="count">
+                          <div class="count" @click="reply(comment)">
                             <i class="layui-icon layui-icon-read"></i>
                             <p>回复</p>
                           </div>
                         </div>
-                        <a>编辑</a>
-                        <a>采纳</a>
-                        <a>删除</a>
+                        <a
+                          v-if="post.isEnd === '0' && comment.uid._id === user._id"
+                          @click="editComment(comment, index)"
+                          >编辑</a
+                        >
+                        <a v-if="post.isEnd === '0' && post.user._id === user._id" @click="setCommentBest(comment)"
+                          >采纳</a
+                        >
+                        <!-- <a>删除</a> -->
                       </div>
                     </div>
                   </div>
-                  <div class="response-li">
+                  <div v-if="comments.length === 0" class="zero-res">消灭零回复!</div>
+                  <!-- <div class="response-li">
                     <div class="res-content">
                       <div class="res-msgs">
                         <img src="/resource/avatar.jpg" class="poster-avatar" />
@@ -140,7 +189,6 @@
                         </div>
                         <div class="res-detail">非常精彩，这是一条被采纳的回复</div>
                       </div>
-                      <!-- <img src="/resource/caina.png" class="get-icon" /> -->
                       <div class="res-icons">
                         <div class="icon-group">
                           <div class="count">
@@ -157,17 +205,19 @@
                         <a>删除</a>
                       </div>
                     </div>
-                  </div>
+                  </div> -->
                 </div>
                 <gg-page
                   :total="total"
                   :current="current"
                   :size="size"
                   :showEnd="true"
+                  :showTotal="true"
                   @changePageIndex="changePageIndex"
                   @changePageSize="changePageSize"
+                  v-show="comments.length > 0"
                 ></gg-page>
-                <gg-edit @changeContent="changeContent" :initContent="content"></gg-edit>
+                <gg-edit @changeContent="changeContent" :initContent="content" ref="editor"></gg-edit>
                 <div class="layui-form-item layui-form-pane">
                   <validation-provider v-slot="{ errors }" name="code" rules="required|length:4">
                     <label class="layui-form-label">验证码</label>
@@ -209,8 +259,10 @@ import Links from '../slider/Links'
 import Edit from '../modules/editor/index'
 import codeMixins from '../../mixins/codeMixins'
 import Pagination from '../modules/pagination/Index'
-import { getPostById } from '../../api/content'
+import { getPostById, getComments, addComment, updateComment, acceptComment, handComment } from '../../api/content'
+import { setCollect } from '../../api/user'
 import { excapeHtml } from '../../utils/excapeHtml'
+import { scrollToElem } from '../../utils/common'
 export default {
   name: 'Detail',
   components: {
@@ -227,13 +279,20 @@ export default {
     return {
       content: '',
       current: 0,
-      total: 101,
-      size: 15,
+      total: 0,
+      size: 10,
       post: {},
-      htmlContent: ''
+      htmlContent: '',
+      comments: [],
+      excape: excapeHtml,
+      selectIndex: -1
     }
   },
-  // computed: {
+  computed: {
+    user() {
+      return this.$store.state.userInfo
+    }
+  },
   //   htmlContent() {
   //     if (this.post.content && (typeof this.post.content === 'undefined' || this.post.content.trim() === '')) {
   //       console.log(1)
@@ -245,6 +304,12 @@ export default {
   //     }
   //   }
   // },
+  watch: {
+    tid() {
+      this.getPost()
+      this.getComments()
+    }
+  },
   methods: {
     changeContent(content) {
       this.content = content
@@ -252,26 +317,196 @@ export default {
     publishResponse() {
       this.$refs.form.validate().then((success) => {
         if (!success) return
+        let user = this.$store.state.userInfo
+        if (!this.$store.state.isLogin) {
+          this.$pop('shake', '请先登陆')
+          return
+        }
+        if (user.status !== '0') {
+          this.$pop('shake', '该用户已被禁言')
+          return
+        }
+        let param = {
+          sid: this.$store.state.sid,
+          code: this.code,
+          content: this.content,
+          pid: this.tid
+        }
+        if (this.selectIndex >= 0) {
+          // 更新操作
+          if (this.content === this.comments[this.selectIndex].content) {
+            this.$pop('shake', '评论数据没有发生改变～～～')
+            return
+          }
+          param.cid = this.comments[this.selectIndex]._id
+          updateComment(param).then((res) => {
+            if (res.code === 200) {
+              let temp = { ...this.comments[this.selectIndex] }
+              temp.content = this.content
+              this.comments.splice(this.selectIndex, 1, temp)
+              this.$pop('', res.msg)
+              this.selectIndex = -1
+              this.content = ''
+              this.code = ''
+              // 重置验证消息，重新获取验证码
+              this.$nextTick(() => {
+                this.$refs.form.reset()
+              })
+              this._getCode()
+            } else {
+              this.$alert(res.msg)
+            }
+          })
+          return
+        }
+        addComment(param).then((res) => {
+          if (res.code === 200) {
+            // 发不成功
+            this.$pop('', res.msg)
+            this.content = ''
+            this.code = ''
+            // 重置验证消息，重新获取验证码
+            this.$nextTick(() => {
+              this.$refs.form.reset()
+            })
+            this._getCode()
+            // 将新评论塞到当前页面
+            let comment = res.data
+            let user = this.$store.state.userInfo
+            comment.uid = {
+              pic: user.pic,
+              nick: user.nick,
+              username: user.username,
+              _id: user._id,
+              isVip: user.isVip
+            }
+            this.comments.push(comment)
+            if (this.total === 0) {
+              this.total += 1
+            }
+          } else {
+            this.$alert(res.msg)
+          }
+        })
       })
     },
     changePageIndex(index) {
       // this.total++
       this.current = index
+      this.getComments()
     },
     changePageSize(pageSize, page) {
       // this.total++
       this.current = page
       this.size = pageSize
+      this.getComments()
+    },
+    getComments() {
+      getComments({ tid: this.tid, page: this.current, limit: this.size }).then((res) => {
+        if (res.code === 200) {
+          this.comments = res.data
+          this.total = res.total
+        } else {
+          this.$alert(res.msg)
+        }
+      })
+    },
+    editComment(comment, index) {
+      this.content = comment.content
+      scrollToElem('.layui-input-block', 500, 62)
+      document.getElementById('edit').focus()
+      this.selectIndex = index
+    },
+    setCommentBest(comment) {
+      this.$confirm(
+        '确定采纳此条评论为最佳么',
+        () => {
+          acceptComment({ tid: this.post._id, cid: comment._id }).then((res) => {
+            if (res.code === 200) {
+              this.$pop('', res.msg)
+              this.comments.isBest = '1'
+              let temp = { ...comment }
+              temp.isBest = '1'
+              this.comments.splice(this.comments.indexOf(comment), 1, temp)
+              this.post.isEnd = '1'
+            } else {
+              this.$alert(res.msg)
+            }
+          })
+        },
+        () => {}
+      )
+    },
+    handComment(comment) {
+      if (!this.$store.state.isLogin) {
+        this.$pop('shake', '请先登陆')
+        return
+      }
+      handComment({ cid: comment._id }).then((res) => {
+        if (res.code === 200) {
+          this.$pop('', res.msg)
+          let temp = { ...comment }
+          temp.hands += 1
+          temp.handed = '1'
+          this.comments.splice(this.comments.indexOf(comment), 1, temp)
+        } else {
+          this.$alert(res.msg)
+        }
+      })
+    },
+    reply(comment) {
+      // 插入@xxx
+      let reg = /^@[\S]+/g
+      if (this.content) {
+        if (this.content && reg.test(this.content)) {
+          // 有@的人，进行替换
+          this.content = this.content.replace(reg, `@${comment.uid.nick} `)
+        } else {
+          this.content = `@${comment.uid.nick} ${this.content}`
+        }
+      } else {
+        // 没内容，直接加@
+        this.content = `@${comment.uid.nick} `
+      }
+
+      // 下拉
+      scrollToElem('.layui-input-block', 500, 62)
+      document.getElementById('edit').focus()
+      this.selectIndex = -1
+    },
+    getPost() {
+      getPostById(this.tid).then((res) => {
+        if (res.code === 200) {
+          this.post = res.data
+          this.htmlContent = excapeHtml(this.post.content)
+        } else {
+          this.$alert(res.msg)
+        }
+      })
+    },
+    setCollect() {
+      if (this.$store.state.isLogin) {
+        let param = {
+          tid: this.post._id,
+          title: this.post.title,
+          isFav: this.post.isFav ? 0 : 1
+        }
+        setCollect(param).then((res) => {
+          if (res.code === 200) {
+            this.post.isFav = this.post.isFav ? 0 : 1
+            this.$pop('', res.msg)
+          } else {
+            this.$alert(res.msg)
+          }
+        })
+      } else {
+        this.$pop('shake', '请先登录，再进行收藏！')
+      }
     }
   },
   mounted() {
-    getPostById(this.tid).then((res) => {
-      if (res.code === 200) {
-        console.log(res)
-        this.post = res.data
-        this.htmlContent = excapeHtml(this.post.content)
-      }
-    })
+    this.getPost()
+    this.getComments()
   }
 }
 </script>
@@ -360,6 +595,11 @@ export default {
       margin 10px 0 0
   .get-icon
     width 15%
+    display flex
+    justify-content center
+    align-items center
+    img
+      width 100%
   .res-icons
     width 100%
     display flex
@@ -368,14 +608,18 @@ export default {
     a
       margin 0 5px
       color #867676
+      cursor pointer
     .icon-group
       display flex
       width 80%
       .count
         display flex
         align-items center
+        &.active
+          color red
         i
           padding 0 5px 0 5px
+          cursor pointer
 .poster-avatar
   width 50px
   height 50px
@@ -400,6 +644,12 @@ export default {
   border-bottom 1px solid #e8e8e8
   margin-bottom 8px
   padding-bottom 5px
+.zero-res
+  text-align center
+  height 50px
+  line-height 50px
+  color #a29797
+  font-size 20px
 .response-li:nth-last-child(1)
   border none
   margin-bottom 20px

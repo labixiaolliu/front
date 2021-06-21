@@ -33,7 +33,7 @@
         <i v-else class="layui-icon layui-icon-next"></i>
       </a>
     </div>
-    <div class="total" v-if="showTotal">到第<input class="imooc-input" />页面 共 {{ pageNum }} 页</div>
+    <div class="total" v-if="showTotal">到第<input class="imooc-input" ref="jumpPage" />页面 共 {{ pageNum }} 页</div>
     <div class="options">
       <div
         class="layui-unselect layui-form-select"
@@ -117,6 +117,12 @@ export default {
       return Math.ceil(this.total / this.size)
     }
   },
+  watch: {
+    total(newval, oldval) {
+      console.log(newval, oldval)
+      this.initPages()
+    }
+  },
   methods: {
     choseOptionIndex(index) {
       if (index !== this.optIndex) {
@@ -164,6 +170,24 @@ export default {
     this.option = _.uniq(_.sortBy(_.concat(this.option, this.size)))
     this.limit = this.size
     this.initPages()
+    let this_ = this
+    this.$refs.jumpPage.onkeydown = function(e) {
+      let theEvent = window.event || e
+      let code = theEvent.keyCode || theEvent.which || theEvent.charCode
+      if (code == 13) {
+        if (isNaN(parseInt(this.value))) {
+          // 不是数字
+          this.value = this_.current + 1
+          return
+        }
+        // 当前页或者页码大于总的
+        if (parseInt(this.value) === this_.current + 1 || parseInt(this.value) > this_.pageNum) {
+          this.value = this_.current + 1
+        } else {
+          this_.$emit('changePageIndex', parseInt(this.value) - 1)
+        }
+      }
+    }
   }
 }
 </script>

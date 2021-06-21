@@ -2,12 +2,17 @@
   <div>
     <ul>
       <!-- <router-link tag="li" v-for="(item, index) of items" :key="'list' + index" :to="'/'" class="ll"> -->
-      <li v-for="(item, index) of items" :key="'list' + index" @click="toPostDetail(item)">
-        <img :src="item.uid.pic" />
+      <li v-for="(item, index) of items" :key="'list' + index">
+        <!-- <img :src="item.uid.pic" /> -->
+        <router-link
+          tag="img"
+          :src="item.uid.pic"
+          :to="{ name: 'userHome', params: { uid: item.uid._id } }"
+        ></router-link>
         <div class="left-item">
           <div class="top">
             <a class="layui-badge">{{ item.catalog }}</a>
-            <a class="title">{{ item.title }}</a>
+            <a class="title" @click="toPostDetail(item)">{{ item.title }}</a>
           </div>
           <div class="bottom">
             <p class="name">{{ item.uid.name }}</p>
@@ -149,6 +154,7 @@ li
   display flex
   align-items center
   flex-wrap wrap
+  cursor pointer
   &:after
     content ''
     width 100%

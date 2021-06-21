@@ -2,7 +2,7 @@
   <div class="layui-container fly-user-main center-item">
     <ul class="layui-nav layui-nav-tree" lay-filter="test">
       <li class="layui-nav-item" v-for="(item, index) of list" :key="'center' + index">
-        <router-link tag="a" :to="{ name: item.link }" :active-class="item.activeClass"
+        <router-link :to="{ name: item.link }" :active-class="item.activeClass"
           ><i class="frontfont" :class="item.icon"></i>{{ item.name }}</router-link
         >
       </li>

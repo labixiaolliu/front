@@ -2,45 +2,32 @@
   <div class="layui-container add-item">
     <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
       <ul class="layui-tab-title">
-        <li class="layui-this">发表新帖</li>
+        <li class="layui-this">编辑帖子</li>
       </ul>
     </div>
     <validation-observer ref="form" v-slot="{ validate }">
       <form class="layui-form">
         <div class="layui-form-item layui-form-pane" pane>
           <div class="layui-col-md3">
-            <validation-provider v-slot="{ errors }" name="catalog" rules="is_not:请选择">
-              <label class="layui-form-label">所在专栏</label>
-              <div class="layui-input-block">
-                <!-- <select name="type" lay-verify="">
+            <label class="layui-form-label">所在专栏</label>
+            <div class="layui-input-block">
+              <!-- <select name="type" lay-verify="">
                   <option v-for="(item, index) of catalogs" :key="'catalog' + index" :value="item.value">{{
                     item.text
                   }}</option>
                 </select> -->
-                <div
-                  class="layui-unselect layui-form-select"
-                  :class="{ 'layui-form-selected': showCataLog }"
-                  @click="openOrCloseCatalog"
-                >
-                  <div class="layui-select-title">
-                    <input type="text" v-model="catalogs[cataindex].text" readonly class="layui-input layui-unselect" />
-                    <i class="layui-edge"></i>
-                  </div>
-                  <dl class="layui-anim layui-anim-upbit">
-                    <dd
-                      v-for="(item, index) of catalogs"
-                      :key="'catalog-d-' + index"
-                      :class="{ 'layui-this': index === cataindex }"
-                      :lay-value="item.value"
-                      @click="choseCatalogIndex(index)"
-                    >
-                      {{ item.text }}
-                    </dd>
-                  </dl>
+              <div class="layui-unselect layui-form-select">
+                <div class="layui-select-title">
+                  <input
+                    type="text"
+                    v-model="catalogs[cataindex].text"
+                    readonly
+                    class="layui-input layui-unselect layui-disabled"
+                  />
+                  <i class="layui-edge"></i>
                 </div>
               </div>
-              <div class="layui-form-mid error">{{ errors[0] }}</div>
-            </validation-provider>
+            </div>
           </div>
           <div class="layui-col-md9 post-title">
             <validation-provider v-slot="{ errors }" name="title" rules="required">
@@ -59,26 +46,16 @@
             <!-- <select name="type" lay-verify="">
               <option v-for="(item, index) of favList" :key="'fav' + index" :value="item">{{ item }}</option>
             </select> -->
-            <div
-              class="layui-unselect layui-form-select"
-              :class="{ 'layui-form-selected': showFav }"
-              @click="openOrCloseFav"
-            >
+            <div class="layui-unselect layui-form-select">
               <div class="layui-select-title">
-                <input type="text" :value="favList[favIndex]" readonly class="layui-input layui-unselect" />
+                <input
+                  type="text"
+                  :value="favList[favIndex]"
+                  readonly
+                  class="layui-input layui-unselect layui-disabled"
+                />
                 <i class="layui-edge"></i>
               </div>
-              <dl class="layui-anim layui-anim-upbit">
-                <dd
-                  v-for="(item, index) of favList"
-                  :key="'fav-d-' + index"
-                  :class="{ 'layui-this': index === favIndex }"
-                  :lay-value="item"
-                  @click="choseFavIndex(index)"
-                >
-                  {{ item }}
-                </dd>
-              </dl>
             </div>
           </div>
         </div>
@@ -109,13 +86,14 @@
 <script>
 import Editor from '../modules/editor/index.vue'
 import codeMixins from '../../mixins/codeMixins'
-import { addPost } from '@/api/content'
+import { editPost } from '@/api/content'
 export default {
-  name: 'Add',
+  name: 'Edit',
   components: {
     Editor
   },
   mixins: [codeMixins],
+  props: ['tid', 'post'],
   data() {
     return {
       title: '',
@@ -168,22 +146,8 @@ export default {
           content: this.content,
           favIndex: this.favIndex
         }
-        localStorage.setItem('postData', JSON.stringify(data))
+        localStorage.setItem('eidtPostData', JSON.stringify(data))
       }
-    },
-    openOrCloseCatalog() {
-      this.showCataLog = !this.showCataLog
-    },
-    choseCatalogIndex(index) {
-      this.cataindex = index
-      this.setPostLocal()
-    },
-    openOrCloseFav() {
-      this.showFav = !this.showFav
-    },
-    choseFavIndex(index) {
-      this.favIndex = index
-      this.setPostLocal()
     },
     async publishPost() {
       this.$refs.form.validate().then((success) => {
@@ -195,18 +159,17 @@ export default {
         let param = {
           sid: this.$store.state.sid,
           code: this.code,
-          catalog: this.catalogs[this.cataindex].value,
           title: this.title,
           content: this.content,
-          fav: this.favList[this.favIndex]
+          tid: this.tid
         }
-        addPost(param).then((res) => {
+        editPost(param).then((res) => {
           if (res.code === 200) {
             // 清除贴子的本地缓存
-            localStorage.setItem('postData', '')
-            this.$pop('', '帖子发布成功，2秒之后跳转到主页！')
+            localStorage.setItem('eidtPostData', '')
+            this.$pop('', '帖子发布成功！2秒后跳转')
             setTimeout(() => {
-              this.$router.push({ name: 'Detail', params: { tid: res.data._id } })
+              this.$router.push({ name: 'Detail', params: { tid: this.tid } })
             }, 2000)
           } else {
             this.$alert(res.msg)
@@ -216,21 +179,38 @@ export default {
     }
   },
   mounted() {
-    let dataStr = localStorage.getItem('postData')
-    if (dataStr && dataStr !== '') {
-      this.$confirm(
-        '存在没有提交的帖子，是否加载',
-        () => {
-          let data = JSON.parse(dataStr)
-          this.favIndex = data.favIndex
-          this.title = data.title
-          this.cataindex = data.cataIndex
-          this.content = data.content
-        },
-        () => {
-          localStorage.setItem('postData', '')
-        }
-      )
+    if (this.post) {
+      // 跳转过来的
+      this.content = this.post.content
+      this.title = this.post.title
+      this.favIndex = this.favList.indexOf(parseInt(this.post.fav))
+      this.cataindex = this.catalogs.indexOf(this.catalogs.filter((item) => item.value === this.post.catalog)[0])
+      let a = this.catalogs.indexOf(this.catalogs.filter((item) => item.value === this.post.catalog)[0])
+      console.log(a)
+      this.setPostLocal()
+    } else {
+      let dataStr = localStorage.getItem('eidtPostData')
+      if (dataStr && dataStr !== '') {
+        this.$confirm(
+          '存在没有提交的帖子，是否加载',
+          () => {
+            let data = JSON.parse(dataStr)
+            this.favIndex = data.favIndex
+            this.title = data.title
+            this.cataindex = data.cataIndex
+            this.content = data.content
+          },
+          () => {
+            let data = JSON.parse(dataStr)
+            this.favIndex = data.favIndex
+            this.cataindex = data.cataIndex
+            this.content = ''
+            this.title = ''
+            this.setPostLocal()
+            // localStorage.setItem('eidtPostData', '')
+          }
+        )
+      }
     }
   }
 }

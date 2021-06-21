@@ -2,7 +2,7 @@
   <div class="hot-item">
     <dl>
       <dt>本周热议</dt>
-      <dd v-for="(item, index) of list" :key="'top' + index">
+      <dd v-for="(item, index) of list" :key="'top' + index" @click="goDetail(item._id)">
         <span>{{ item.title }}</span>
         <i class="layui-icon layui-icon-reply-fill"></i>
         <a>{{ item.answer }}</a>
@@ -17,6 +17,11 @@ export default {
   data() {
     return {
       list: []
+    }
+  },
+  methods: {
+    goDetail(id) {
+      this.$router.push({ name: 'Detail', params: { tid: id } })
     }
   },
   mounted() {

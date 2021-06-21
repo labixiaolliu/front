@@ -7,6 +7,7 @@ const htmlEncode = (html) => {
   return output
 }
 const excapeHtml = (content) => {
+  if (!content) return ''
   // 解析表情
   let result = content
   let face = /\sface\[\W{1,}\]/g
@@ -48,7 +49,6 @@ const excapeHtml = (content) => {
     let group = result.match(code)
 
     group.map((item) => {
-      console.log(item)
       result = result.replace(item, htmlEncode(item))
     })
     result = result.replace(/\[pre\]/g, '<pre>')

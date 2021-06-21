@@ -8,8 +8,8 @@
         <div class="left-msg">
           <p>我的会员信息</p>
           <div>
-            <p>积分经验：100</p>
-            <p>您当前为：非VIP</p>
+            <p>积分经验：{{ userInfo.favs }}</p>
+            <p>您当前为：{{ userInfo.isVip === '0' ? '非VIP' : `VIP${userInfo.isVip}` }}</p>
           </div>
         </div>
         <div class="right-sign">
@@ -70,6 +70,7 @@
 </template>
 <script>
 import Sign from '../slider/Sign'
+import { getUserInfo } from '../../api/user'
 export default {
   name: 'UserCenter',
   components: {
@@ -77,6 +78,26 @@ export default {
   },
   data() {
     return {}
+  },
+  computed: {
+    userInfo() {
+      return this.$store.state.userInfo
+    }
+  },
+  methods: {
+    getUserInfo() {
+      const userInfo = this.$store.state.userInfo
+      getUserInfo({ uid: userInfo._id }).then((res) => {
+        if (res.code === 200) {
+          this.$store.commit('setUserInfo', res.data)
+        } else {
+          this.$pop('', res.msg)
+        }
+      })
+    }
+  },
+  mounted() {
+    this.getUserInfo()
   }
 }
 </script>
@@ -86,6 +107,12 @@ export default {
 @media (max-width: 768px)
   .center-item
     margin-left 0px !important
+  .left-msg
+    width 100% !important
+  .user-msg
+    flex-wrap wrap !important
+  .right-sign
+    width 100% !important
 .center-item
   margin-left 222px
   background white

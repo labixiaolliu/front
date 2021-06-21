@@ -142,8 +142,6 @@ export default {
             nick: this.nick
           })
             .then((res) => {
-              console.log(111)
-              console.log(res)
               if (res.code === 200) {
                 this.name = ''
                 this.password = ''

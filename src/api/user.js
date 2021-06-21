@@ -19,5 +19,51 @@ const updatePassword = (param) => {
 const resetPassword = (param) => {
   return axios.post('user/resetPassword', param)
 }
+// 收藏，取消收藏帖子
+const setCollect = (param) => {
+  return axios.post('user/setCollect', param)
+}
 
-export { userSign, updateUserInfo, updateUsername, updatePassword, resetPassword }
+// 获取登陆用户发帖列表
+const getPostsByUid = (param) => {
+  return axios.get('/user/getPostsByUid?' + qs.stringify(param))
+}
+
+// 删帖
+const deletePost = (param) => {
+  return axios.get('/user/deletePost?' + qs.stringify(param))
+}
+
+// 获取用户收藏帖子
+const getCollectionByUid = (param) => {
+  return axios.get('/user/getCollections?' + qs.stringify(param))
+}
+
+// 获取用户信息
+const getUserInfo = (param) => {
+  return axios.get('/public/getUserInfo?' + qs.stringify(param))
+}
+
+// 获取其他用户发表的帖子
+const getPosts = (param) => {
+  return axios.get('/public/getPosts?' + qs.stringify(param))
+}
+
+const getComments = (param) => {
+  return axios.get('/public/getCommentsByUid?' + qs.stringify(param))
+}
+
+export {
+  userSign,
+  updateUserInfo,
+  updateUsername,
+  updatePassword,
+  resetPassword,
+  setCollect,
+  getPostsByUid,
+  deletePost,
+  getCollectionByUid,
+  getUserInfo,
+  getPosts,
+  getComments
+}

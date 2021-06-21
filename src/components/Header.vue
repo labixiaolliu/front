@@ -4,7 +4,7 @@
       <a class="layui-inline">
         <img src="../assets/logo-2.png" />
       </a>
-      <ul class="layui-nav layui-col-space5 layui-inline left-bar">
+      <ul class="layui-nav layui-col-space5 layui-inline left-bar main-tool">
         <li class="layui-nav-item">
           <a href="" class="layui-col-space10"><i class="iconfont icon-contact"></i>交流</a>
         </li>
@@ -39,9 +39,9 @@
         </div>
         <template v-if="isShow">
           <dl class="layui-nav-child">
-            <dd><i class="layui-icon layui-icon-email"></i><span>基本设置</span></dd>
-            <dd><i class="layui-icon layui-icon-set"></i><span>我的消息</span></dd>
-            <dd><i class="layui-icon layui-icon-home"></i><span>我的主页</span></dd>
+            <dd @click="goInfo"><i class="layui-icon layui-icon-email"></i><span>基本设置</span></dd>
+            <dd @click="goMyMsg"><i class="layui-icon layui-icon-set"></i><span>我的消息</span></dd>
+            <dd @click="goUserHome"><i class="layui-icon layui-icon-home"></i><span>我的主页</span></dd>
             <dd @click="logout">
               <span>退出</span>
             </dd>
@@ -89,20 +89,30 @@ export default {
           this.$store.commit('setToken', '')
           this.$store.commit('setUserInfo', '')
           this.$store.commit('setIsLogin', false)
-          console.log(this.$router)
-          console.log(this.$route.name)
           if (this.$route.name !== 'index') {
             this.$router.push({ name: 'index' })
           }
         },
         () => {}
       )
+    },
+    goUserHome() {
+      this.$router.push({ name: 'userHome', params: { uid: this.userInfo._id } })
+    },
+    goMyMsg() {
+      this.$router.push({ name: 'userMsg' })
+    },
+    goInfo() {
+      this.$router.push({ name: 'myInfo' })
     }
   },
   mounted() {}
 }
 </script>
 <style scoped lang="stylus">
+@media (max-width: 768px)
+  .main-tool
+    display none
 .fly-header
   position fixed
   top 0

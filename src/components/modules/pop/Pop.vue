@@ -54,6 +54,7 @@ export default {
   position fixed
   left 50%
   top 50%
+  z-index 9999
   .content
     background rgba(0, 0, 0, 0.4)
     color #fff

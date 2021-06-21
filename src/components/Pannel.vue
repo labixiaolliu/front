@@ -11,8 +11,8 @@
         <router-link tag="li" to="/index/logs">动态</router-link>
         <li class="line"></li>
         <template v-if="isLogin">
-          <li>我发表的帖</li>
-          <li>我收藏的帖</li>
+          <li><router-link :to="{ name: 'myPost' }">我发表的帖</router-link></li>
+          <li><router-link :to="{ name: 'myCollection' }">我收藏的帖</router-link></li>
         </template>
       </ul>
     </div>

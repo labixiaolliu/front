@@ -129,13 +129,12 @@ export default {
     //   this.init()
     // },
     currentSortIndex(newValue, oldValue) {
-      console.log('sort hange from ' + oldValue + ' to ' + newValue)
+      console.log(oldValue)
       this.sort = this.sortList[newValue].value
       this.init()
     },
     $route(newValue, oldValue) {
-      console.log('route change')
-      console.log(newValue, oldValue)
+      console.log(oldValue)
       this.catalog = newValue.params.catalog
       console.log(this.catalog)
       this.init()
