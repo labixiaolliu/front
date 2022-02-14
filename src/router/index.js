@@ -34,6 +34,11 @@ const Add = () => import(/* webpackChunkName: 'Add' */ '../components/contents/A
 const Edit = () => import(/* webpackChunkName: 'Edit' */ '../components/contents/Edit.vue')
 const Detail = () => import(/* webpackChunkName: 'Detail' */ '../components/contents/Detail.vue')
 
+const Question = () => import(/* webpackChunkName: 'Question' */ '../views/Question.vue')
+const Answer = () => import(/* webpackChunkName: 'Answer' */ '../views/Answer.vue')
+const RealAnswer = () => import(/* webpackChunkName: 'RealAnswer' */ '../views/RealAnswer.vue')
+const SingleAnswer = () => import(/* webpackChunkName: 'SingleAnswer' */ '../views/SingleAnswer.vue')
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -50,6 +55,26 @@ const routes = [
         path: '/index/:catalog',
         name: 'template',
         component: Template
+      },
+      {
+        path: '/question',
+        name: 'question',
+        component: Question
+      },
+      {
+        path: '/answer',
+        name: 'answer',
+        component: Answer
+      },
+      {
+        path: '/singleAnswer',
+        name: 'singleAnswer',
+        component: SingleAnswer
+      },
+      {
+        path: '/realAnswer',
+        name: 'RealAnswer',
+        component: RealAnswer
       }
     ]
   },

@@ -81,6 +81,21 @@ const handComment = (param) => {
   return axios.get('/comment/hand?' + qs.stringify(param))
 }
 
+const addQuestions = (param) => {
+  return axios.post('/public/addQuestions', param)
+}
+
+const getAnswer = (param) => {
+  return axios.post('/public/getAnswer', param)
+}
+
+const getRealAnswer = (param) => {
+  return axios.post('/public/getRealAnswer', param)
+}
+
+const getAnswerByName = (param) => {
+  return axios.post('/public/getAnswerByName', param)
+}
 export {
   getList,
   getTips,
@@ -94,5 +109,9 @@ export {
   addComment,
   updateComment,
   acceptComment,
-  handComment
+  handComment,
+  addQuestions,
+  getAnswer,
+  getAnswerByName,
+  getRealAnswer
 }
