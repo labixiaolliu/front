@@ -30,6 +30,7 @@
         @mouseout="hide()"
       >
         <div class="user-info">
+          <p class="fly-index" v-show="num.message && num.message !== 0" @click="goMyMsg">{{ num.message }}</p>
           <p>{{ userInfo.nick }}</p>
           <a>
             <i class="iconfont icon-renzheng" title="认证信息" v-show="userInfo.isVip > 0"></i>
@@ -49,6 +50,11 @@
         </template>
       </div>
     </div>
+    <div class="pop-item" v-show="hasMessage">
+      <div class="pop-content">
+        <p>您有{{ num.message }}条未读消息</p>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -57,10 +63,24 @@ export default {
   data() {
     return {
       isShow: false,
-      showInterval: null
+      showInterval: null,
+      hasMessage: false
+    }
+  },
+  watch: {
+    num(newVal, oleVal) {
+      if (oleVal !== newVal && newVal.event) {
+        this.hasMessage = true
+        setTimeout(() => {
+          this.hasMessage = false
+        }, 2000)
+      }
     }
   },
   computed: {
+    num() {
+      return this.$store.state.count
+    },
     userInfo() {
       return this.$store.state.userInfo || { username: '', isVip: 0, nick: '', pic: '' }
     },
@@ -106,7 +126,11 @@ export default {
       this.$router.push({ name: 'myInfo' })
     }
   },
-  mounted() {}
+  mounted() {
+    // setTimeout(() => {
+    //   this.hasMessage = true
+    // }, 2000)
+  }
 }
 </script>
 <style scoped lang="stylus">
@@ -137,6 +161,13 @@ export default {
         display flex
         align-items center
         height 100%
+        .fly-index
+          background #FF5722
+          padding 2px 4px
+          color #ffffff
+          font-size 12px
+          border-radius 3px
+          margin-right 5px
         >img
           height 80%
           border-radius 50%
@@ -175,4 +206,27 @@ export default {
     font-size 22px
   ul>li>a, ul>li>a>i
     font-size 20px
+  .pop-item
+    display flex
+    flex-direction column
+    align-items center
+    justify-content center
+    position fixed
+    right 20px
+    top 60px
+    z-index 3000
+    .pop-content
+      background #000000
+      color #ffffff
+      padding 5px 8px
+      border-radius 3px
+    &:before
+      content ''
+      width 10px
+      height 10px
+      background #000000
+      align-self flex-start
+      margin-left 20px
+      transform rotateZ(45deg)
+      transform-origin 0% 100%
 </style>

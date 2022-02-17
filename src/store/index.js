@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import WebSocketClient from '../utils/WebSocket'
 
 Vue.use(Vuex)
 
@@ -9,9 +10,15 @@ export default new Vuex.Store({
     isLogin: false,
     token: '',
     userInfo: {},
-    isHide: false
+    isHide: false,
+    ws: null,
+    count: 0 // 未读消息数量
   },
   mutations: {
+    initWebSocket(state, config) {
+      state.ws = new WebSocketClient(config)
+      state.ws.init()
+    },
     setSid(state, value) {
       state.sid = value
     },
@@ -29,8 +36,17 @@ export default new Vuex.Store({
     },
     setIsHide(state, value) {
       state.isHide = value
+    },
+    setMessage(state, msg) {
+      console.log('TCL: Data -> store', 99999)
+      console.log('TCL: Data -> store', msg.message)
+      state.count = msg
     }
   },
-  actions: {},
+  actions: {
+    message({ commit }, msg) {
+      commit('setMessage', msg)
+    }
+  },
   modules: {}
 })

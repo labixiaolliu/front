@@ -202,6 +202,9 @@ router.beforeEach((to, from, next) => {
       store.commit('setToken', token)
       store.commit('setUserInfo', userInfo)
       store.commit('setIsLogin', true)
+      if (!store.state.ws) {
+        store.commit('initWebSocket', {})
+      }
     } else {
       localStorage.clear()
       store.commit('setToken', '')

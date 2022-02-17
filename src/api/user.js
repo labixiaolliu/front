@@ -53,6 +53,16 @@ const getComments = (param) => {
   return axios.get('/public/getCommentsByUid?' + qs.stringify(param))
 }
 
+// 获取回复
+const getUserMsg = (param) => {
+  return axios.get('/user/getMsg?' + qs.stringify(param))
+}
+
+// 设置消息已读
+const setMessageRead = (param) => {
+  return axios.get('/user/setMessageRead?' + qs.stringify(param))
+}
+
 export {
   userSign,
   updateUserInfo,
@@ -65,5 +75,7 @@ export {
   getCollectionByUid,
   getUserInfo,
   getPosts,
-  getComments
+  getComments,
+  getUserMsg,
+  setMessageRead
 }
